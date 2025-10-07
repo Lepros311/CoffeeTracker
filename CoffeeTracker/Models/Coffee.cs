@@ -8,9 +8,7 @@ public class Coffee
 
     public decimal Price { get; set; }
 
-    public string Description { get; set; }
+    public List<Sale> Sales { get; set; }
 
-    public List<string> Ingredients { get; set; }
-
-    public string ImageUrl { get; set; }
+    public bool IsDeleted { get; set; }
 }

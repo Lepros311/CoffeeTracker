@@ -17,6 +17,10 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<CoffeeTrackerDbContext>();
     dbContext.Database.Migrate();
+
+    var apiClient = scope.ServiceProvider.GetRequiredService<IYourCoffeeApiClient>();
+    await CoffeeSeeder.SeedNamesAsync(dbContext, apiClient);
+    await CoffeeSeeder.SeedPricesAsync(dbContext);
 }
 
 if (app.Environment.IsDevelopment())
