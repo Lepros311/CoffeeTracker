@@ -11,7 +11,7 @@ public class CoffeeTrackerDbContext : DbContext
 
     public DbSet<Sale> Sales { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer();
+    
 
 }
 
