@@ -9,7 +9,10 @@ public class CoffeeSeeder
     {
         try
         {
-            var coffeeNames = await apiClient.GetCoffeeNamesAsync();
+            var coffeeNames = (await apiClient.GetCoffeeNamesAsync()).ToList();
+
+            Console.WriteLine($"Fetched {coffeeNames.Count} coffee names.");
+
 
             foreach (var name in coffeeNames)
             {
@@ -19,7 +22,7 @@ public class CoffeeSeeder
                     db.Coffees.Add(new Coffee
                     {
                         Name = name,
-                        Price = 0m,
+                        Price = 1m,
                         IsDeleted = false
                     });
                 }
@@ -37,14 +40,14 @@ public class CoffeeSeeder
     {
         try
         {
-            var coffeesWithoutPrice = await db.Coffees.Where(c => c.Price == 0 &&
+            var coffeesWithoutPrice = await db.Coffees.Where(c => c.Price > 8 &&
             !c.IsDeleted).ToListAsync();
 
             var random = new Random();
 
             foreach (var coffee in coffeesWithoutPrice)
             {
-                coffee.Price = Math.Round(random.Next(100, 1501) / 100m, 2);
+                coffee.Price = Math.Round(random.Next(100, 801) / 100m, 2);
             }
 
             await db.SaveChangesAsync();

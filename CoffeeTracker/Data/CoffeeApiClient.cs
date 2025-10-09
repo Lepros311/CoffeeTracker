@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using CoffeeTracker.Api.Models;
 
 namespace CoffeeTracker.Api.Data;
 
@@ -11,14 +12,14 @@ public class CoffeeApiClient : ICoffeeApi
         _http = http;
     }
 
-    public async Task<IEnumerable<string>> GetCoffeeNamesAsync()
+    public async Task<List<string>> GetCoffeeNamesAsync()
     {
         var response = await _http.GetAsync("https://api.sampleapis.com/coffee/iced");
         response.EnsureSuccessStatusCode();
 
         var json = await response.Content.ReadAsStringAsync();
-        var names = JsonSerializer.Deserialize<List<string>>(json);
+        var coffees = JsonSerializer.Deserialize<List<CoffeeDto>>(json);
 
-        return names ?? Enumerable.Empty<string>();
+        return coffees?.Select(c => c.Name?.Trim()).Where(name => !string.IsNullOrEmpty(name)).Distinct().ToList() ?? new List<string>();
     }
 }

@@ -2,5 +2,5 @@
 
 public interface ICoffeeApi
 {
-    Task<IEnumerable<string>> GetCoffeeNamesAsync();
+    Task<List<string>> GetCoffeeNamesAsync();
 }
