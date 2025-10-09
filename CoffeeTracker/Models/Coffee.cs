@@ -10,5 +10,5 @@ public class Coffee
 
     public List<Sale> Sales { get; set; }
 
-    public bool IsDeleted { get; set; }
+    public bool IsDeleted { get; set; } = false;
 }

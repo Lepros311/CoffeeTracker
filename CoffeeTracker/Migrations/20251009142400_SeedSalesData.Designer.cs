@@ -4,6 +4,7 @@ using CoffeeTracker.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeTracker.Api.Migrations
 {
     [DbContext(typeof(CoffeeTrackerDbContext))]
-    partial class CoffeeTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251009142400_SeedSalesData")]
+    partial class SeedSalesData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,7 +87,7 @@ namespace CoffeeTracker.Api.Migrations
                             Id = 1,
                             CoffeeId = 3,
                             CoffeeName = "Iced Coffee",
-                            DateAndTimeOfSale = new DateTime(2023, 10, 9, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                            DateAndTimeOfSale = new DateTime(2025, 10, 9, 10, 24, 0, 335, DateTimeKind.Local).AddTicks(3325),
                             IsDeleted = false,
                             Total = 1.62m
                         });

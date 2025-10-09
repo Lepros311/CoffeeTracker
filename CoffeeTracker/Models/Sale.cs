@@ -14,5 +14,5 @@ public class Sale
 
     public int CoffeeId { get; set; }
 
-    public bool IsDeleted { get; set; }
+    public bool IsDeleted { get; set; } = false;
 }

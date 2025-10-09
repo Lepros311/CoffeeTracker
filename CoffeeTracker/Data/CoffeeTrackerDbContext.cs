@@ -31,6 +31,19 @@ public class CoffeeTrackerDbContext : DbContext
             entity.HasOne(s => s.Coffee).WithMany(c => c.Sales).HasForeignKey(s => s.CoffeeId).IsRequired();
             entity.HasQueryFilter(s => !s.IsDeleted);
         });
+
+        modelBuilder.Entity<Sale>().HasData(new List<Sale>
+        {
+            new Sale
+            {
+                Id = 1,
+                DateAndTimeOfSale = new DateTime(2023, 10, 9, 10, 30, 0),
+                Total = 1.62m,
+                CoffeeName = "Iced Coffee",
+                CoffeeId = 3,
+                IsDeleted = false
+            }
+        });
     }
 }
 
