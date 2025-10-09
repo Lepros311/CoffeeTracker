@@ -40,8 +40,8 @@ public class SaleService : ISaleService
         {
             Id = s.Id,
             DateAndTimeOfSale = s.DateAndTimeOfSale,
-            Total = s.Coffee.Price,
-            CoffeeName = s.Coffee.Name
+            CoffeeName = s.Coffee.Name,
+            Total = s.Coffee.Price
         }).ToList();
 
         return responseWithDataDto;
