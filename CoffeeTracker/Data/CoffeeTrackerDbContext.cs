@@ -27,6 +27,7 @@ public class CoffeeTrackerDbContext : DbContext
             entity.ToTable("Sales");
             entity.Property(s => s.DateAndTimeOfSale).IsRequired();
             entity.Property(s => s.Total).IsRequired().HasColumnType("decimal(18,2)");
+            entity.Property(s => s.CoffeeName).IsRequired();
             entity.HasOne(s => s.Coffee).WithMany(c => c.Sales).HasForeignKey(s => s.CoffeeId).IsRequired();
             entity.HasQueryFilter(s => !s.IsDeleted);
         });

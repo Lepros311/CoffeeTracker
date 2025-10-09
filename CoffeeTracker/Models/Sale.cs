@@ -10,6 +10,8 @@ public class Sale
 
     public Coffee Coffee { get; set; }
 
+    public string CoffeeName { get; set; }
+
     public int CoffeeId { get; set; }
 
     public bool IsDeleted { get; set; }

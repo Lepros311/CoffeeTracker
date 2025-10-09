@@ -5,7 +5,7 @@ namespace CoffeeTracker.Api.Data;
 
 public class CoffeeSeeder
 {
-    public static async Task SeedNamesAsync(CoffeeTrackerDbContext db, IYourCoffeeApiClient apiClient)
+    public static async Task SeedNamesAsync(CoffeeTrackerDbContext db, ICoffeeApi apiClient)
     {
         try
         {

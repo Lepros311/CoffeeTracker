@@ -9,6 +9,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<CoffeeTrackerDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddHttpClient<ICoffeeApi, CoffeeApiClient>();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -18,7 +20,7 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<CoffeeTrackerDbContext>();
     dbContext.Database.Migrate();
 
-    var apiClient = scope.ServiceProvider.GetRequiredService<IYourCoffeeApiClient>();
+    var apiClient = scope.ServiceProvider.GetRequiredService<ICoffeeApi>();
     await CoffeeSeeder.SeedNamesAsync(dbContext, apiClient);
     await CoffeeSeeder.SeedPricesAsync(dbContext);
 }
