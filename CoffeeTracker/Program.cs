@@ -1,4 +1,6 @@
 using CoffeeTracker.Api.Data;
+using CoffeeTracker.Api.Repositories;
+using CoffeeTracker.Api.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<CoffeeTrackerDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<ICoffeeRepository, CoffeeRepository>();
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+builder.Services.AddScoped<ICoffeeService, CoffeeService>();
+builder.Services.AddScoped<ISaleService, SaleService>();
 
 builder.Services.AddHttpClient<ICoffeeApi, CoffeeApiClient>();
 
