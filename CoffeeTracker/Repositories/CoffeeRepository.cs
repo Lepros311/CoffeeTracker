@@ -59,4 +59,124 @@ public class CoffeeRepository : ICoffeeRepository
 
         return response;
     }
+
+    public async Task<BaseResponse<Coffee>> GetCoffeeById(int id)
+    {
+        var response = new BaseResponse<Coffee>();
+
+        try
+        {
+            var coffee = await _dbContext.Coffees.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (coffee == null)
+            {
+                response.Status = ResponseStatus.Fail;
+                response.Message = "Coffee not found.";
+            }
+            else
+            {
+                response.Status = ResponseStatus.Success;
+                response.Data = coffee;
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Message = $"Error in CoffeeRepository {nameof(CoffeeRepository)}: {ex.Message}";
+            response.Status = ResponseStatus.Fail;
+        }
+
+        return response;
+    }
+
+    public async Task<BaseResponse<Coffee>> CreateCoffee(Coffee coffee)
+    {
+        var response = new BaseResponse<Coffee>();
+
+        try
+        {
+            _dbContext.Coffees.Add(coffee);
+
+            await _dbContext.SaveChangesAsync();
+
+            if (coffee == null)
+            {
+                response.Status = ResponseStatus.Fail;
+                response.Message = "Coffee not created.";
+            }
+            else
+            {
+                response.Status = ResponseStatus.Success;
+                response.Data = coffee;
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Message = $"Error in CoffeeRepository {nameof(CreateCoffee)}: {ex.Message}";
+            response.Status = ResponseStatus.Fail;
+        }
+
+        return response;
+    }
+
+    public async Task<BaseResponse<Coffee>> UpdateCoffee(Coffee updatedCoffee)
+    {
+        var response = new BaseResponse<Coffee>();
+
+        try
+        {
+            _dbContext.Coffees.Update(updatedCoffee);
+            var affectedRows = await _dbContext.SaveChangesAsync();
+
+            if (affectedRows == 0)
+            {
+                response.Status = ResponseStatus.Fail;
+                response.Message = "No changes were saved.";
+            }
+            else
+            {
+                response.Status = ResponseStatus.Success;
+                response.Data = updatedCoffee;
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Message = $"Error in CoffeeRepository {nameof(UpdateCoffee)}: {ex.Message}";
+            response.Status = ResponseStatus.Fail;
+        }
+
+        return response;
+    }
+
+    public async Task<BaseResponse<Coffee>> DeleteCoffee(int id)
+    {
+        var response = new BaseResponse<Coffee>();
+
+        try
+        {
+            response = await GetCoffeeById(id);
+
+            response.Data.IsDeleted = true;
+
+            _dbContext.Coffees.Update(response.Data);
+            var affectedRows = await _dbContext.SaveChangesAsync();
+
+            if (affectedRows == 0)
+            {
+                response.Status = ResponseStatus.Fail;
+                response.Message = "Deletion failed.";
+            }
+            else
+            {
+                response.Status = ResponseStatus.Success;
+                response.Message = "Coffee deleted.";
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Message = $"Error in CoffeeRepository {nameof(DeleteCoffee)}: {ex.Message}";
+            response.Status = ResponseStatus.Fail;
+        }
+
+        return response;
+    }
 }

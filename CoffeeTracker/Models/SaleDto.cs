@@ -9,4 +9,6 @@ public class SaleDto
     public decimal Total { get; set; }
 
     public string CoffeeName { get; set; }
+
+    public int CoffeeId { get; set; }
 }

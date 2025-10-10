@@ -28,6 +28,84 @@ namespace CoffeeTracker.Api.Controllers
 
             return Ok(responseWithDtos.Data);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SaleDto>> GetSaleById(int id)
+        {
+            var response = await _saleService.GetSaleById(id);
+
+            if (response.Status == ResponseStatus.Fail)
+            {
+                return NotFound(response.Message);
+            }
+
+            var returnedSale = response.Data;
+
+            var saleDto = new SaleDto
+            {
+                Id = returnedSale.Id,
+                DateAndTimeOfSale = returnedSale.DateAndTimeOfSale,
+                CoffeeName = returnedSale.CoffeeName,
+                Total = returnedSale.Total
+            };
+
+            return Ok(saleDto);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<SaleDto>> CreateSale([FromBody] SaleDto SaleDto)
+        {
+            var responseWithDataDto = await _saleService.CreateSale(SaleDto);
+
+            if (responseWithDataDto.Message == "Coffee not found.")
+            {
+                return NotFound(responseWithDataDto.Message);
+            }
+
+            if (responseWithDataDto.Status == ResponseStatus.Fail)
+            {
+                return BadRequest(responseWithDataDto.Message);
+            }
+
+            return CreatedAtAction(nameof(GetSaleById),
+                new { id = responseWithDataDto.Data.Id }, responseWithDataDto.Data);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<SaleDto>> UpdateSale(int id, [FromBody] SaleDto saleDto)
+        {
+            var response = await _saleService.UpdateSale(id, saleDto);
+
+            if (response.Message == "Sale not found." || response.Message == "Coffee not found.")
+            {
+                return NotFound(response.Message);
+            }
+
+            if (response.Status == ResponseStatus.Fail)
+            {
+                return BadRequest(response.Message);
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSale(int id)
+        {
+            var response = await _saleService.DeleteSale(id);
+
+            if (response.Message == "Sale not found.")
+            {
+                return NotFound(response.Message);
+            }
+            else if (response.Status == ResponseStatus.Fail)
+            {
+                return BadRequest(response.Message);
+            }
+
+            return NoContent();
+        }
+
     }
 
 }

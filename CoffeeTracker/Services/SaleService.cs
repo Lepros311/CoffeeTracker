@@ -46,4 +46,119 @@ public class SaleService : ISaleService
 
         return responseWithDataDto;
     }
+
+    public async Task<BaseResponse<Sale>> GetSaleById(int id)
+    {
+        return await _saleRepository.GetSaleById(id);
+    }
+
+    public async Task<BaseResponse<SaleDto>> CreateSale(SaleDto saleDto)
+    {
+        var saleResponse = new BaseResponse<Sale>();
+        var saleResponseWithDataDto = new BaseResponse<SaleDto>();
+
+        var coffeeResponse = await _coffeeRepository.GetCoffeeById(saleDto.CoffeeId);
+
+        if (coffeeResponse.Status == ResponseStatus.Fail)
+        {
+            saleResponseWithDataDto.Status = ResponseStatus.Fail;
+            saleResponseWithDataDto.Message = coffeeResponse.Message;
+            return saleResponseWithDataDto;
+        }
+
+        if (saleDto.Total < 0)
+        {
+            saleResponseWithDataDto.Status = ResponseStatus.Fail;
+            saleResponseWithDataDto.Message = "Sale total must be greater than 0.";
+            return saleResponseWithDataDto;
+        }
+
+        var newSale = new Sale
+        {
+            DateAndTimeOfSale = saleDto.DateAndTimeOfSale,
+            CoffeeName = saleDto.CoffeeName,
+            Total = saleDto.Total
+        };
+
+        newSale.Coffee = coffeeResponse.Data;
+
+        saleResponse = await _saleRepository.CreateSale(newSale);
+
+        if (saleResponse.Status == ResponseStatus.Fail)
+        {
+            saleResponseWithDataDto.Status = ResponseStatus.Fail;
+            saleResponseWithDataDto.Message = saleResponse.Message;
+            return saleResponseWithDataDto;
+        }
+        else
+        {
+            saleResponseWithDataDto.Status = ResponseStatus.Success;
+
+            var newSaleDto = new SaleDto
+            {
+                Id = newSale.Id,
+                DateAndTimeOfSale = newSale.DateAndTimeOfSale,
+                CoffeeName = newSale.CoffeeName,
+                Total = newSale.Total,
+            };
+
+            saleResponseWithDataDto.Data = newSaleDto;
+        }
+
+        return saleResponseWithDataDto;
+    }
+
+    public async Task<BaseResponse<Sale>> UpdateSale(int id, SaleDto saleDto)
+    {
+        var saleResponse = new BaseResponse<Sale>();
+
+        saleResponse = await GetSaleById(id);
+
+        if (saleResponse.Status == ResponseStatus.Fail)
+        {
+            return saleResponse;
+        }
+
+        if (saleDto.Total < 0)
+        {
+            saleResponse.Status = ResponseStatus.Fail;
+            saleResponse.Message = "Sale total must be greater than 0.";
+            return saleResponse;
+        }
+
+        var existingSale = saleResponse.Data;
+
+        existingSale.DateAndTimeOfSale = saleDto.DateAndTimeOfSale;
+        existingSale.CoffeeName = saleDto.CoffeeName;
+        existingSale.Total = saleDto.Total;
+
+        var categoryResponse = await _coffeeRepository.GetCoffeeById(saleDto.CoffeeId);
+
+        if (categoryResponse.Status == ResponseStatus.Fail)
+        {
+            saleResponse.Status = ResponseStatus.Fail;
+            saleResponse.Message = categoryResponse.Message;
+            return saleResponse;
+        }
+
+        existingSale.CoffeeId = saleDto.CoffeeId;
+
+        saleResponse = await _saleRepository.UpdateSale(existingSale);
+
+        return saleResponse;
+    }
+
+    public async Task<BaseResponse<Sale>> DeleteSale(int id)
+    {
+        var response = new BaseResponse<Sale>();
+
+        response = await _saleRepository.GetSaleById(id);
+
+        if (response.Status == ResponseStatus.Fail)
+        {
+            return response;
+        }
+
+        return await _saleRepository.DeleteSale(id);
+    }
 }

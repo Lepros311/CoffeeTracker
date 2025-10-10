@@ -45,4 +45,86 @@ public class CoffeeService : ICoffeeService
 
         return responseWithDataDto;
     }
+
+    public async Task<BaseResponse<Coffee>> GetCoffeeById(int id)
+    {
+        return await _coffeeRepository.GetCoffeeById(id);
+    }
+
+    public async Task<BaseResponse<CoffeeDto>> CreateCoffee(CoffeeDto writeCoffeeDto)
+    {
+        var response = new BaseResponse<Coffee>();
+        var responseWithDataDto = new BaseResponse<CoffeeDto>();
+
+        var newCoffee = new Coffee
+        {
+            Name = writeCoffeeDto.Name,
+            Price = writeCoffeeDto.Price
+        };
+
+        response = await _coffeeRepository.CreateCoffee(newCoffee);
+
+        if (response.Status == ResponseStatus.Fail)
+        {
+            responseWithDataDto.Status = ResponseStatus.Fail;
+            responseWithDataDto.Message = response.Message;
+            return responseWithDataDto;
+        }
+        else
+        {
+            responseWithDataDto.Status = ResponseStatus.Success;
+
+            var newCoffeeDto = new CoffeeDto
+            {
+                Id = newCoffee.Id,
+                Name = newCoffee.Name,
+                Price = newCoffee.Price
+            };
+
+            responseWithDataDto.Data = newCoffeeDto;
+        }
+
+        return responseWithDataDto;
+    }
+
+    public async Task<BaseResponse<Coffee>> UpdateCoffee(int id, CoffeeDto CoffeeDto)
+    {
+        var response = new BaseResponse<Coffee>();
+
+        response = await GetCoffeeById(id);
+
+        if (response.Status == ResponseStatus.Fail)
+        {
+            return response;
+        }
+
+        var existingCoffee = response.Data;
+
+        existingCoffee.Name = CoffeeDto.Name;
+        existingCoffee.Price = CoffeeDto.Price;
+
+        response = await _coffeeRepository.UpdateCoffee(existingCoffee);
+
+        return response;
+    }
+
+    public async Task<BaseResponse<Coffee>> DeleteCoffee(int id)
+    {
+        var response = new BaseResponse<Coffee>();
+
+        response = await _coffeeRepository.GetCoffeeById(id);
+
+        if (response.Status == ResponseStatus.Fail)
+        {
+            return response;
+        }
+
+        if (response.Data.Sales.Count > 0)
+        {
+            response.Message = "Cannot delete coffees included in recorded sales.";
+            return response;
+        }
+
+        return await _coffeeRepository.DeleteCoffee(id);
+    }
 }

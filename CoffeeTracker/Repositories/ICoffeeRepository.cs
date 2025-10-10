@@ -7,13 +7,13 @@ public interface ICoffeeRepository
 {
     public Task<PagedResponse<List<Coffee>>> GetPagedCoffees(PaginationParams paginationParams);
 
-    //public Task<BaseResponse<Coffee>> GetProductById(int id);
+    public Task<BaseResponse<Coffee>> GetCoffeeById(int id);
 
-    //public Task<BaseResponse<Coffee>> CreateCoffee(Coffee coffee);
+    public Task<BaseResponse<Coffee>> CreateCoffee(Coffee coffee);
 
-    //public Task<BaseResponse<Coffee>> UpdateCoffee(Coffee updatedCoffee);
+    public Task<BaseResponse<Coffee>> UpdateCoffee(Coffee updatedCoffee);
 
-    //public Task<BaseResponse<Coffee>> DeleteCoffee(int id);
+    public Task<BaseResponse<Coffee>> DeleteCoffee(int id);
 
     //public Task<List<int>> GetAllCoffeeIds();
 
