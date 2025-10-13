@@ -119,7 +119,7 @@ public class CoffeeService : ICoffeeService
             return response;
         }
 
-        if (response.Data.Sales.Count > 0)
+        if (response.Data.Sales != null && response.Data.Sales.Count > 0)
         {
             response.Message = "Cannot delete coffees included in recorded sales.";
             return response;

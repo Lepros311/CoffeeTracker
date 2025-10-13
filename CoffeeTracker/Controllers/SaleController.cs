@@ -45,17 +45,18 @@ namespace CoffeeTracker.Api.Controllers
             {
                 Id = returnedSale.Id,
                 DateAndTimeOfSale = returnedSale.DateAndTimeOfSale,
-                CoffeeName = returnedSale.CoffeeName,
-                Total = returnedSale.Total
+                CoffeeName = returnedSale.Coffee.Name,
+                CoffeeId = returnedSale.Coffee.Id,
+                Total = returnedSale.Coffee.Price
             };
 
             return Ok(saleDto);
         }
 
         [HttpPost]
-        public async Task<ActionResult<SaleDto>> CreateSale([FromBody] SaleDto SaleDto)
+        public async Task<ActionResult<SaleDto>> CreateSale([FromBody] WriteSaleDto writeSaleDto)
         {
-            var responseWithDataDto = await _saleService.CreateSale(SaleDto);
+            var responseWithDataDto = await _saleService.CreateSale(writeSaleDto);
 
             if (responseWithDataDto.Message == "Coffee not found.")
             {

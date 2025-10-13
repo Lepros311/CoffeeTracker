@@ -41,6 +41,7 @@ public class SaleService : ISaleService
             Id = s.Id,
             DateAndTimeOfSale = s.DateAndTimeOfSale,
             CoffeeName = s.Coffee.Name,
+            CoffeeId = s.Coffee.Id,
             Total = s.Coffee.Price
         }).ToList();
 
@@ -52,12 +53,12 @@ public class SaleService : ISaleService
         return await _saleRepository.GetSaleById(id);
     }
 
-    public async Task<BaseResponse<SaleDto>> CreateSale(SaleDto saleDto)
+    public async Task<BaseResponse<SaleDto>> CreateSale(WriteSaleDto writeSaleDto)
     {
         var saleResponse = new BaseResponse<Sale>();
         var saleResponseWithDataDto = new BaseResponse<SaleDto>();
 
-        var coffeeResponse = await _coffeeRepository.GetCoffeeById(saleDto.CoffeeId);
+        var coffeeResponse = await _coffeeRepository.GetCoffeeById(writeSaleDto.CoffeeId);
 
         if (coffeeResponse.Status == ResponseStatus.Fail)
         {
@@ -66,19 +67,19 @@ public class SaleService : ISaleService
             return saleResponseWithDataDto;
         }
 
-        if (saleDto.Total < 0)
+        var newSale = new Sale
+        {
+            CoffeeId = coffeeResponse.Data.Id,
+            DateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? DateTime.UtcNow,
+            Total = coffeeResponse.Data.Price
+        };
+
+        if (newSale.Total < 0)
         {
             saleResponseWithDataDto.Status = ResponseStatus.Fail;
             saleResponseWithDataDto.Message = "Sale total must be greater than 0.";
             return saleResponseWithDataDto;
         }
-
-        var newSale = new Sale
-        {
-            DateAndTimeOfSale = saleDto.DateAndTimeOfSale,
-            CoffeeName = saleDto.CoffeeName,
-            Total = saleDto.Total
-        };
 
         newSale.Coffee = coffeeResponse.Data;
 
