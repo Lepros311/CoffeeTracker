@@ -82,6 +82,7 @@ public class SaleService : ISaleService
         }
 
         newSale.Coffee = coffeeResponse.Data;
+        newSale.CoffeeName = coffeeResponse.Data.Name;
 
         saleResponse = await _saleRepository.CreateSale(newSale);
 
@@ -99,7 +100,8 @@ public class SaleService : ISaleService
             {
                 Id = newSale.Id,
                 DateAndTimeOfSale = newSale.DateAndTimeOfSale,
-                CoffeeName = newSale.CoffeeName,
+                CoffeeName = newSale.Coffee.Name,
+                CoffeeId = newSale.Coffee.Id,
                 Total = newSale.Total,
             };
 
