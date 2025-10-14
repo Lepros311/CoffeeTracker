@@ -45,9 +45,9 @@ namespace CoffeeTracker.Api.Controllers
             {
                 Id = returnedSale.Id,
                 DateAndTimeOfSale = returnedSale.DateAndTimeOfSale,
-                CoffeeName = returnedSale.Coffee.Name,
-                CoffeeId = returnedSale.Coffee.Id,
-                Total = returnedSale.Coffee.Price
+                CoffeeName = returnedSale.CoffeeName,
+                CoffeeId = returnedSale.CoffeeId,
+                Total = returnedSale.Total
             };
 
             return Ok(saleDto);
@@ -73,9 +73,9 @@ namespace CoffeeTracker.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<SaleDto>> UpdateSale(int id, [FromBody] SaleDto saleDto)
+        public async Task<ActionResult<SaleDto>> UpdateSale(int id, [FromBody] WriteSaleDto writeSaleDto)
         {
-            var response = await _saleService.UpdateSale(id, saleDto);
+            var response = await _saleService.UpdateSale(id, writeSaleDto);
 
             if (response.Message == "Sale not found." || response.Message == "Coffee not found.")
             {

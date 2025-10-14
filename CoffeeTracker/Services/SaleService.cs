@@ -40,9 +40,9 @@ public class SaleService : ISaleService
         {
             Id = s.Id,
             DateAndTimeOfSale = s.DateAndTimeOfSale,
-            CoffeeName = s.Coffee.Name,
-            CoffeeId = s.Coffee.Id,
-            Total = s.Coffee.Price
+            CoffeeName = s.CoffeeName,
+            CoffeeId = s.CoffeeId,
+            Total = s.Total
         }).ToList();
 
         return responseWithDataDto;
@@ -111,7 +111,7 @@ public class SaleService : ISaleService
         return saleResponseWithDataDto;
     }
 
-    public async Task<BaseResponse<Sale>> UpdateSale(int id, SaleDto saleDto)
+    public async Task<BaseResponse<Sale>> UpdateSale(int id, WriteSaleDto writeSaleDto)
     {
         var saleResponse = new BaseResponse<Sale>();
 
@@ -122,29 +122,22 @@ public class SaleService : ISaleService
             return saleResponse;
         }
 
-        if (saleDto.Total < 0)
-        {
-            saleResponse.Status = ResponseStatus.Fail;
-            saleResponse.Message = "Sale total must be greater than 0.";
-            return saleResponse;
-        }
-
         var existingSale = saleResponse.Data;
 
-        existingSale.DateAndTimeOfSale = saleDto.DateAndTimeOfSale;
-        existingSale.CoffeeName = saleDto.CoffeeName;
-        existingSale.Total = saleDto.Total;
+        existingSale.DateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? existingSale.DateAndTimeOfSale;
 
-        var categoryResponse = await _coffeeRepository.GetCoffeeById(saleDto.CoffeeId);
+        var coffeeResponse = await _coffeeRepository.GetCoffeeById(writeSaleDto.CoffeeId);
 
-        if (categoryResponse.Status == ResponseStatus.Fail)
+        if (coffeeResponse.Status == ResponseStatus.Fail)
         {
             saleResponse.Status = ResponseStatus.Fail;
-            saleResponse.Message = categoryResponse.Message;
+            saleResponse.Message = coffeeResponse.Message;
             return saleResponse;
         }
 
-        existingSale.CoffeeId = saleDto.CoffeeId;
+        existingSale.CoffeeId = coffeeResponse.Data.Id;
+        existingSale.CoffeeName = coffeeResponse.Data.Name;
+        existingSale.Total = coffeeResponse.Data.Price;
 
         saleResponse = await _saleRepository.UpdateSale(existingSale);
 
