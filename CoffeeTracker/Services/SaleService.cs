@@ -1,6 +1,8 @@
 ﻿using CoffeeTracker.Api.Models;
 using CoffeeTracker.Api.Repositories;
 using CoffeeTracker.Api.Responses;
+using Humanizer;
+using System.Globalization;
 
 namespace CoffeeTracker.Api.Services;
 
@@ -53,7 +55,7 @@ public class SaleService : ISaleService
         return await _saleRepository.GetSaleById(id);
     }
 
-    public async Task<BaseResponse<SaleDto>> CreateSale(WriteSaleDto writeSaleDto)
+    public async Task<BaseResponse<SaleDto>> CreateSale(CreateSaleDto writeSaleDto)
     {
         var saleResponse = new BaseResponse<Sale>();
         var saleResponseWithDataDto = new BaseResponse<SaleDto>();
@@ -67,10 +69,28 @@ public class SaleService : ISaleService
             return saleResponseWithDataDto;
         }
 
+        DateTime dateAndTimeOfSale;
+
+        if (!string.IsNullOrWhiteSpace(writeSaleDto.DateAndTimeOfSale))
+        {
+            var formats = new[] { "MM-dd-yyyy h:mm tt", "M-d-yyyy h:mm tt" };
+            if (!DateTime.TryParseExact(writeSaleDto.DateAndTimeOfSale, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateAndTimeOfSale))
+            {
+                saleResponseWithDataDto.Status = ResponseStatus.Fail;
+                saleResponseWithDataDto.Message = "Invalid date format. Use MM-dd-yyyy h:mm tt (e.g., 11-04-2025 10:45 pm).";
+                return saleResponseWithDataDto;
+            }
+        }
+        else
+        {
+            dateAndTimeOfSale = DateTime.UtcNow;
+        }
+
+
         var newSale = new Sale
         {
             CoffeeId = coffeeResponse.Data.Id,
-            DateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? DateTime.UtcNow,
+            DateAndTimeOfSale = dateAndTimeOfSale,
             Total = coffeeResponse.Data.Price
         };
 
@@ -111,7 +131,7 @@ public class SaleService : ISaleService
         return saleResponseWithDataDto;
     }
 
-    public async Task<BaseResponse<Sale>> UpdateSale(int id, WriteSaleDto writeSaleDto)
+    public async Task<BaseResponse<Sale>> UpdateSale(int id, UpdateSaleDto updateSaleDto)
     {
         var saleResponse = new BaseResponse<Sale>();
 
@@ -124,20 +144,40 @@ public class SaleService : ISaleService
 
         var existingSale = saleResponse.Data;
 
-        existingSale.DateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? existingSale.DateAndTimeOfSale;
+        DateTime dateAndTimeOfSale;
 
-        var coffeeResponse = await _coffeeRepository.GetCoffeeById(writeSaleDto.CoffeeId);
-
-        if (coffeeResponse.Status == ResponseStatus.Fail)
+        if (!string.IsNullOrWhiteSpace(updateSaleDto.DateAndTimeOfSale))
         {
-            saleResponse.Status = ResponseStatus.Fail;
-            saleResponse.Message = coffeeResponse.Message;
-            return saleResponse;
+            var formats = new[] { "MM-dd-yyyy h:mm tt", "M-d-yyyy h:mm tt" };
+            if (!DateTime.TryParseExact(updateSaleDto.DateAndTimeOfSale, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateAndTimeOfSale))
+            {
+                saleResponse.Status = ResponseStatus.Fail;
+                saleResponse.Message = "Invalid date format. Use MM-dd-yyyy h:mm tt (e.g., 11-04-2025 10:45 pm).";
+                return saleResponse;
+            }
+        }
+        else
+        {
+            dateAndTimeOfSale = existingSale.DateAndTimeOfSale;
         }
 
-        existingSale.CoffeeId = coffeeResponse.Data.Id;
-        existingSale.CoffeeName = coffeeResponse.Data.Name;
-        existingSale.Total = coffeeResponse.Data.Price;
+        existingSale.DateAndTimeOfSale = dateAndTimeOfSale;
+
+        if (updateSaleDto.CoffeeId != null)
+        {
+            var coffeeResponse = await _coffeeRepository.GetCoffeeById(updateSaleDto.CoffeeId.Value);
+
+            if (coffeeResponse.Status == ResponseStatus.Fail)
+            {
+                saleResponse.Status = ResponseStatus.Fail;
+                saleResponse.Message = coffeeResponse.Message;
+                return saleResponse;
+            }
+
+            existingSale.CoffeeId = coffeeResponse.Data.Id;
+            existingSale.CoffeeName = coffeeResponse.Data.Name;
+            existingSale.Total = coffeeResponse.Data.Price;
+        }
 
         saleResponse = await _saleRepository.UpdateSale(existingSale);
 

@@ -54,7 +54,7 @@ namespace CoffeeTracker.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<SaleDto>> CreateSale([FromBody] WriteSaleDto writeSaleDto)
+        public async Task<ActionResult<SaleDto>> CreateSale([FromBody] CreateSaleDto writeSaleDto)
         {
             var responseWithDataDto = await _saleService.CreateSale(writeSaleDto);
 
@@ -73,9 +73,9 @@ namespace CoffeeTracker.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<SaleDto>> UpdateSale(int id, [FromBody] WriteSaleDto writeSaleDto)
+        public async Task<ActionResult<SaleDto>> UpdateSale(int id, [FromBody] UpdateSaleDto updateSaleDto)
         {
-            var response = await _saleService.UpdateSale(id, writeSaleDto);
+            var response = await _saleService.UpdateSale(id, updateSaleDto);
 
             if (response.Message == "Sale not found." || response.Message == "Coffee not found.")
             {

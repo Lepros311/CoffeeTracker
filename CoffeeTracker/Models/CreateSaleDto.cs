@@ -1,8 +1,8 @@
 ﻿namespace CoffeeTracker.Api.Models;
 
-public class WriteSaleDto
+public class CreateSaleDto
 {
     public int CoffeeId { get; set; }
 
-    public DateTime? DateAndTimeOfSale { get; set; }
+    public String? DateAndTimeOfSale { get; set; }
 }
