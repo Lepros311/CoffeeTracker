@@ -23,7 +23,7 @@ public class SaleRepository : ISaleRepository
 
         try
         {
-            var query = _dbContext.Sales.Include(s => s.Coffee).AsQueryable();
+            var query = _dbContext.Sales.AsQueryable();
 
             if (paginationParams.MinPrice.HasValue)
                 query = query.Where(s => s.Total >= paginationParams.MinPrice.Value);
@@ -69,7 +69,7 @@ public class SaleRepository : ISaleRepository
 
         try
         {
-            var sale = await _dbContext.Sales.Include(s => s.Coffee).FirstOrDefaultAsync(s => s.Id == id);
+            var sale = await _dbContext.Sales.FirstOrDefaultAsync(s => s.Id == id);
 
             if (sale == null)
             {
