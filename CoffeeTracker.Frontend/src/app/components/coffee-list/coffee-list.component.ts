@@ -11,18 +11,26 @@ import {CoffeeDto} from '../../models/coffee.model';
         <div class="coffee-list">
             <h2>Coffee List</h2>
 
-            <div *ngIf="loading" class="loading">Loading coffees...</div>
+            @if (loading) {
+                <div class="loading">Loading coffees...</div>
+            }
 
-            <div *ngIf="error" class="error">Error: {{error}}</div>
+            @if (error) {
+                <div class="error">Error: {{error}}</div>
+            }
 
-            <div *ngIf="!loading && !error" class="coffees">
-                <div *ngFor="let coffee of coffees" class="coffee-item">
-                    <h3>{{coffee.name}}</h3>
-                    <p>Price: {{coffee.price}}</p>
-                    <button (click)="editCoffee(coffee)">Edit</button>
-                    <button (click)="deleteCoffee(coffee.id)">Delete</button>
+            @if (!loading && !error) {
+                <div class="coffees">
+                    @for (coffee of coffees; track coffee.id) {
+                        <div class="coffee-item">
+                            <h3>{{coffee.name}}</h3>
+                            <p>Price: {{coffee.price}}</p>
+                            <button (click)="editCoffee(coffee)">Edit</button>
+                            <button (click)="deleteCoffee(coffee.id)">Delete</button>
+                        </div>
+                    }
                 </div>
-            </div>
+            }
         </div>
     `,
     styleUrls: ['./coffee-list.component.css']
