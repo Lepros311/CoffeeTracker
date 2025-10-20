@@ -1,5 +1,8 @@
-import { Routes } from '@angular/router';
-import { HomeComponent } from '././home/home.component';
+import {Routes} from '@angular/router';
+import {HomeComponent} from '././home/home.component';
+import {CoffeeListComponent} from './components/coffee-list/coffee-list.component';
 
-export const routes: Routes = [{ path: '', component: HomeComponent }];
-export default routes;
+export const routes: Routes = [
+    {path: '', component: HomeComponent},
+    {path: 'coffees', component: CoffeeListComponent}
+];
