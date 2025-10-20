@@ -23,10 +23,14 @@ import {CoffeeDto} from '../../models/coffee.model';
                 <div class="coffees">
                     @for (coffee of coffees; track coffee.id) {
                         <div class="coffee-item">
-                            <h3>{{coffee.name}}</h3>
-                            <p>Price: {{coffee.price}}</p>
-                            <button (click)="editCoffee(coffee)">Edit</button>
-                            <button (click)="deleteCoffee(coffee.id)">Delete</button>
+                            <div class="coffee-info">
+                              <h3>{{coffee.name}}</h3>
+                              <p>Price: {{coffee.price}}</p>
+                            </div>
+                            <div class="coffee-actions">
+                              <button (click)="editCoffee(coffee)">Edit</button>
+                              <button (click)="deleteCoffee(coffee.id)">Delete</button>
+                            </div>
                         </div>
                     }
                 </div>

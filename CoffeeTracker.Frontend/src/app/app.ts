@@ -9,7 +9,7 @@ import {RouterOutlet, RouterLink} from '@angular/router';
       <nav class="navbar">
         <a [routerLink]="['/']" class="nav-brand"><h1>☕ Coffee Tracker</h1></a>
         <div class="nav-links">
-          <a [routerLink]="['/coffees']" class="nav-link">Coffees</a>
+          <a [routerLink]="['/']" class="nav-link">Coffees</a>
         </div>
       </nav>
       <section class="content">

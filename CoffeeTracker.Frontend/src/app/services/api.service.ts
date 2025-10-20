@@ -22,7 +22,7 @@ export interface PaginationParams {
     providedIn: 'root'
 })
 export class ApiService {
-    private baseUrl = 'http://localhost:4200/api';
+    private baseUrl = 'https://localhost:7205/api';
     constructor(private http: HttpClient) { }
 
     // Coffee API endpoints
