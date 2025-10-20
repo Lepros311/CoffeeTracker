@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {RouterOutlet, RouterLink} from '@angular/router';
-import {HttpClientModule} from '@angular/common/http';
 
 @Component({
   standalone: true,
@@ -19,7 +18,7 @@ import {HttpClientModule} from '@angular/common/http';
     </main>
   `,
   styleUrls: ['./app.css'],
-  imports: [RouterOutlet, RouterLink, HttpClientModule],
+  imports: [RouterOutlet, RouterLink],
 })
 export class App {
   title = 'Coffee Tracker';
