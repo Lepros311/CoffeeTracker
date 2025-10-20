@@ -1,24 +1,26 @@
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import {Component} from '@angular/core';
+import {RouterOutlet, RouterLink} from '@angular/router';
+import {HttpClientModule} from '@angular/common/http';
 
 @Component({
   standalone: true,
   selector: 'app-root',
-  template: `
+  template:`
     <main>
-      <a [routerLink]="['/']">
-        <header class="brand-name">
-          <img class="brand-logo" src="/assets/logo.svg" alt="logo" aria-hidden="true" />
-        </header>
-      </a>
+      <nav class="navbar">
+        <a [routerLink]="['/']" class="nav-brand"><h1>☕ Coffee Tracker</h1></a>
+        <div class="nav-links">
+          <a [routerLink]="['/coffees']" class="nav-link">Coffees</a>
+        </div>
+      </nav>
       <section class="content">
         <router-outlet></router-outlet>
       </section>
     </main>
   `,
-  styleUrls: ['./app.css'], // or './app.component.css' if you rename
-  imports: [RouterOutlet, RouterLink],
+  styleUrls: ['./app.css'],
+  imports: [RouterOutlet, RouterLink, HttpClientModule],
 })
 export class App {
-  title = 'homes';
+  title = 'Coffee Tracker';
 }
