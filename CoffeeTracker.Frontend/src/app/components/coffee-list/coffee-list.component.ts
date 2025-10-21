@@ -96,8 +96,9 @@ export class CoffeeListComponent implements OnInit {
     }
 
     editCoffee(coffee: CoffeeDto): void {
-        //TODO: Implement edit functionality
-        console.log('Edit coffee: ', coffee);
+        this.selectedCoffee = {...coffee};
+        this.isEditing = true;
+        this.showForm = true;
     }
 
     onSaveCoffee(coffee: CoffeeDto): void {
@@ -115,7 +116,7 @@ export class CoffeeListComponent implements OnInit {
                 this.showForm = false;
             },
             error: (err) => {
-                this.error = 'Failed t0 create coffee';
+                this.error = 'Failed to create coffee';
                 console.error('Error creating coffee: ', err);
             }
         });

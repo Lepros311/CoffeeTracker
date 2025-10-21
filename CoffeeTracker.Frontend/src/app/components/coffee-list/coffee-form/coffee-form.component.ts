@@ -43,7 +43,7 @@ import {CoffeeDto} from '../../../models/coffee.model';
               #priceInput="ngModel"
               class="form-control"
             />
-            @if (priceInput.invalid && priceInput.touched) {
+            @if ((priceInput.invalid && priceInput.touched) || (coffee.price <= 0 && priceInput.touched)) {
                 <div class="error-message">
                     Price is required and must be greater than 0
                 </div>
@@ -51,7 +51,7 @@ import {CoffeeDto} from '../../../models/coffee.model';
           </div>
 
           <div class="form-actions">
-            <button type="submit" [disabled]="coffeeForm.invalid" class="btn btn-primary">
+            <button type="submit" [disabled]="coffeeForm.invalid || coffee.price <= 0" class="btn btn-primary">
                 {{isEditing ? 'Update Coffee' : 'Add Coffee'}}
             </button>
             <button type="button" (click)="onCancel()" class="btn btn-secondary">
