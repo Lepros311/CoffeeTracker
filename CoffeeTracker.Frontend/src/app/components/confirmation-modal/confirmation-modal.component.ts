@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
       <div class="modal-overlay" (click)="onCancel()">
         <div class="modal-content" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h3>{{title}}</h3>
+            <h3>{{modalTitle}}</h3>
           </div>
           <div class="modal-body">
             <p>{{message}}</p>
@@ -27,7 +27,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ConfirmationModalComponent {
   @Input() isVisible = false;
-  @Input() title = 'Confirm Action';
+  @Input() modalTitle = 'Confirm Action';
   @Input() message = 'Are you sure you want to proceed?';
   @Output() confirm = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
