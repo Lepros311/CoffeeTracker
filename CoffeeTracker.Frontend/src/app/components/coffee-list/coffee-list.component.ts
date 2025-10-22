@@ -3,11 +3,12 @@ import {CommonModule} from '@angular/common';
 import {ApiService, PaginationParams} from '../../services/api.service';
 import {CoffeeDto} from '../../models/coffee.model';
 import {CoffeeFormComponent} from './coffee-form/coffee-form.component'
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 
 @Component({
     selector: 'app-coffee-list',
     standalone: true,
-    imports: [CommonModule, CoffeeFormComponent],
+    imports: [CommonModule, CoffeeFormComponent, ConfirmationModalComponent],
     template: `
         <div class="coffee-list">
             <h2>Coffee List</h2>
@@ -30,7 +31,7 @@ import {CoffeeFormComponent} from './coffee-form/coffee-form.component'
                             </div>
                             <div class="coffee-actions">
                               <button (click)="editCoffee(coffee)">Edit</button>
-                              <button (click)="deleteCoffee(coffee.id)">Delete</button>
+                              <button (click)="confirmDelete(coffee)">Delete</button>
                             </div>
                         </div>
                     }
@@ -42,13 +43,21 @@ import {CoffeeFormComponent} from './coffee-form/coffee-form.component'
                     [coffee]="selectedCoffee"
                     [isEditing]="isEditing"
                     (save)="onSaveCoffee($event)"
-                    (cancel)="onCancelForm()">
+                    (cancel)="cancelDelete()">
                 </app-coffee-form>
             }
 
             @if (!showForm) {
                 <button class="add-btn" (click)="addCoffee()">Add New Coffee</button>
             }
+
+            <app-confirmation-modal
+                [isVisible]="showDeleteModal"
+                modalTitle="Delete Coffee"
+                [message]="deleteMessage"
+                (confirm)="deleteCoffee()"
+                (cancel)="cancelDelete()">
+            </app-confirmation-modal>
         </div>
     `,
     styleUrls: ['./coffee-list.component.css']
@@ -60,6 +69,10 @@ export class CoffeeListComponent implements OnInit {
     showForm = false;
     isEditing = false;
     selectedCoffee: CoffeeDto = {id: 0, name: '', price: 0};
+
+    showDeleteModal = false;
+    coffeeToDelete: CoffeeDto | null = null;
+    deleteMessage = '';
 
     constructor(private apiService: ApiService) {}
 
@@ -135,22 +148,32 @@ export class CoffeeListComponent implements OnInit {
         });
     }
 
-    deleteCoffee(id: number): void {
-        if (confirm('Are you sure you want to delete this coffee?')) {
-            this.apiService.deleteCoffee(id).subscribe({
+    confirmDelete(coffee: CoffeeDto): void {
+        this.coffeeToDelete = coffee;
+        this.deleteMessage = `Are you sure you want to delete "${coffee.name}"? This action cannot be undown.`;
+        this.showDeleteModal = true;
+    }
+
+    deleteCoffee(): void {
+        if (this.coffeeToDelete) {
+            this.apiService.deleteCoffee(this.coffeeToDelete.id).subscribe({
                 next: () => {
                     this.loadCoffees();
+                    this.showDeleteModal = false;
+                    this.coffeeToDelete = null;
                 },
                 error: (err) => {
                     this.error = 'Failed to delete coffee';
                     console.error('Error deleting coffee: ', err);
+                    this.showDeleteModal = false;
+                    this.coffeeToDelete = null;
                 }
             });
         }
     }
 
-    onCancelForm(): void {
-        this.showForm = false;
-        this.selectedCoffee = {id: 0, name: '', price: 0};
+    cancelDelete(): void {
+        this.showDeleteModal = false;
+        this.coffeeToDelete = null;
     }
 }
