@@ -26,7 +26,7 @@ import {ApiService, PaginationParams} from '../../services/api.service';
           >
             <option value="">Select a coffee</option>
             @for (coffee of coffees; track coffee.id) {
-              <option [value]="coffee.id">{{coffee.name}} - $/{{coffee.price}}</option>
+              <option [value]="coffee.id">{{coffee.name}} - {{coffee.price | currency:'USD':'symbol':'1.2-2'}}</option>
             }
           </select>
           @if (coffeeInput.invalid && coffeeInput.touched) {
@@ -117,7 +117,8 @@ export class SalesFormComponent implements OnInit {
 
   private getCurrentDateTime(): string {
     const now = new Date();
-    // Formate for datetime-local input
-    return now.toISOString().slice(0, 16);
+    // Offset for local timezone
+    const localTime = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+    return localTime.toISOString().slice(0, 16);
   }
 }
