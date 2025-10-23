@@ -76,9 +76,26 @@ export class SalesFormComponent implements OnInit {
     // Create a copy to avoid modifying the original
     this.sale = {...this.sale};
 
-    // Set default date to now if not editing
-    if (!this.isEditing && !this.sale.dateAndTimeOfSale) {
+    // Convert backend date format to datetime-local format
+    if (this.sale.dateAndTimeOfSale) {
+      this.sale.dateAndTimeOfSale = this.convertToDateTimeLocal(this.sale.dateAndTimeOfSale);
+    } else if (!this.isEditing) {
+      // Set default date to now if not editing
       this.sale.dateAndTimeOfSale = this.getCurrentDateTime();
+    }
+  }
+
+  private convertToDateTimeLocal(dateString: string): string {
+    try {
+      // Parse the date string from backend (handles the microseconds)
+      const date = new Date(dateString);
+      // Convert to datetime-local format (YYYY-MM-DDTHH:MM)
+      // Offset for local timezone (same approach as getCurrentDateTime)
+      const localTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+      return localTime.toISOString().slice(0, 16);
+    } catch (error) {
+      console.error('Error parsing date: ', error);
+      return '';
     }
   }
 
