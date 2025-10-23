@@ -14,16 +14,20 @@ import {ConfirmationModalComponent} from '../confirmation-modal/confirmation-mod
       <div class="sales-list">
         <h2>Sales Records</h2>
 
-        <div class="date-filter">
-          <label for="filterDate">Filter by Date:</label>
-          <input
-            type="date"
-            id="filterDate"
-            [(ngModel)]="filterDate"
-            (change)="filterByDate()"
-            class="form-control"
-          />
-          <button (click)="clearDateFilter()" class="btn btn-secondary">Clear Filter</button>
+        <div class="list-header">
+          <div class="date-filter">
+            <label for="filterDate">Filter by Date:</label>
+            <input
+              type="date"
+              id="filterDate"
+              [(ngModel)]="filterDate"
+              (change)="filterByDate()"
+              class="form-control"
+            />
+            <button (click)="clearDateFilter()" class="btn btn-secondary btn-small">Clear Filter</button>
+          </div>
+
+          <button class="add-btn" (click)="addSale()">Add New Sale</button>
         </div>
 
         @if (loading) {
@@ -59,10 +63,6 @@ import {ConfirmationModalComponent} from '../confirmation-modal/confirmation-mod
             (save)="onSaveSale($event)"
             (cancel)="onCancelForm()">
           </app-sales-form>
-        }
-
-        @if (!showForm) {
-          <button class="add-btn" (click)="addSale()">Add New Sale</button>
         }
 
         <app-confirmation-modal

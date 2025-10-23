@@ -13,6 +13,11 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
         <div class="coffee-list">
             <h2>Coffee List</h2>
 
+            <div class="list-header">
+              <div></div> <!-- Empty div to push Add button to the right -->
+              <button class="add-btn" (click)="addCoffee()">Add New Coffee</button>
+            </div>
+
             @if (loading) {
                 <div class="loading">Loading coffees...</div>
             }
@@ -45,10 +50,6 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
                     (save)="onSaveCoffee($event)"
                     (cancel)="onCancelForm()">
                 </app-coffee-form>
-            }
-
-            @if (!showForm) {
-                <button class="add-btn" (click)="addCoffee()">Add New Coffee</button>
             }
 
             <app-confirmation-modal
