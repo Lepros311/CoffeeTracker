@@ -27,7 +27,7 @@ public class PaginationParams
 
     public int? CoffeeId { get; set; }
 
-    public DateTime? MinDateOfSale { get; set; }
+    public DateOnly? MinDateOfSale { get; set; }
 
-    public DateTime? MaxDateOfSale { get; set; }
+    public DateOnly? MaxDateOfSale { get; set; }
 }

@@ -30,9 +30,9 @@ public class SaleRepository : ISaleRepository
             if (paginationParams.MaxPrice.HasValue)
                 query = query.Where(s => s.Total <= paginationParams.MaxPrice.Value);
             if (paginationParams.MinDateOfSale.HasValue)
-                query = query.Where(s => s.DateAndTimeOfSale >= paginationParams.MinDateOfSale.Value);
+                query = query.Where(s => DateOnly.FromDateTime(s.DateAndTimeOfSale) >= paginationParams.MinDateOfSale.Value);
             if (paginationParams.MaxDateOfSale.HasValue)
-                query = query.Where(s => s.DateAndTimeOfSale <= paginationParams.MaxDateOfSale.Value);
+                query = query.Where(s => DateOnly.FromDateTime(s.DateAndTimeOfSale) <= paginationParams.MaxDateOfSale.Value);
 
             var sortBy = paginationParams.SortBy?.Trim().ToLower() ?? "saleid";
             var sortAscending = paginationParams.SortAscending;
