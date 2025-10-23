@@ -52,10 +52,9 @@ export class ApiService {
     getPagedSales(paginationParams: PaginationParams): Observable<SaleDto[]> {
         let params = new HttpParams().set('page', paginationParams.page.toString()).set('pageSize', paginationParams.pageSize.toString());
 
+        // Add other optional params if they exist
         if (paginationParams.minDateOfSale) params = params.set('minDateOfSale', paginationParams.minDateOfSale);
         if (paginationParams.maxDateOfSale) params = params.set('maxDateOfSale', paginationParams.maxDateOfSale);
-
-        // const params = new HttpParams().set('page', paginationParams.page.toString()).set('pageSize', paginationParams.pageSize.toString());
 
         return this.http.get<SaleDto[]>(`${this.baseUrl}/sales`, {params});
     }
