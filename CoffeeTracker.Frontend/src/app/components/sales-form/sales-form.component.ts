@@ -105,10 +105,29 @@ export class SalesFormComponent implements OnInit {
     if (this.sale.coffeeId) {
       const saleData = {
         coffeeId: this.sale.coffeeId,
-        dateAndTimeOfSale: this.sale.dateAndTimeOfSale || undefined
+        dateAndTimeOfSale: this.sale.dateAndTimeOfSale ? this.formatDateForBackend(this.sale.dateAndTimeOfSale) : undefined
       };
       this.save.emit(saleData);
     }
+  }
+
+  private formatDateForBackend(dateTimeString: string): string {
+    if (!dateTimeString) {
+      return '';
+    }
+
+    const date = new Date(dateTimeString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    // Convert to 12-hour format
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    const displayHours = hours % 12 || 12;
+
+    return `${month}-${day}-${year} ${displayHours}:${minutes} ${ampm}`;
   }
 
   onCancel(): void {

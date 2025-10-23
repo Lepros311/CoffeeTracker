@@ -30,8 +30,8 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
                               <p>Price: {{coffee.price}}</p>
                             </div>
                             <div class="coffee-actions">
-                              <button (click)="editCoffee(coffee)">Edit</button>
-                              <button (click)="confirmDelete(coffee)">Delete</button>
+                              <button class="edit-btn" (click)="editCoffee(coffee)">Edit</button>
+                              <button class="delete-btn" (click)="confirmDelete(coffee)">Delete</button>
                             </div>
                         </div>
                     }
@@ -43,7 +43,7 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
                     [coffee]="selectedCoffee"
                     [isEditing]="isEditing"
                     (save)="onSaveCoffee($event)"
-                    (cancel)="cancelDelete()">
+                    (cancel)="onCancelForm()">
                 </app-coffee-form>
             }
 
@@ -175,5 +175,10 @@ export class CoffeeListComponent implements OnInit {
     cancelDelete(): void {
         this.showDeleteModal = false;
         this.coffeeToDelete = null;
+    }
+
+    onCancelForm(): void {
+      this.showForm = false;
+      this.selectedCoffee = {id: 0, name: '', price: 0};
     }
 }
