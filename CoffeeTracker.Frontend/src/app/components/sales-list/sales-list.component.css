@@ -101,3 +101,30 @@
 .add-btn:hover {
   background-color: #229954;
 }
+
+.date-filter {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-filter label {
+  font-weight: 500;
+  color: #555;
+  margin: 0;
+}
+
+.date-filter .form-control {
+  width: auto;
+  margin: 0;
+}
+
+.date-filter .btn {
+  margin: 0;
+  padding: 8px 16px;
+}

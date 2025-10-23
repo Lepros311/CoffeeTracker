@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 import {ApiService, PaginationParams} from '../../services/api.service';
 import {SaleDto, CreateSaleDto, UpdateSaleDto} from '../../models/sale.model';
 import {SalesFormComponent} from '../sales-form/sales-form.component';
@@ -8,10 +9,22 @@ import {ConfirmationModalComponent} from '../confirmation-modal/confirmation-mod
 @Component({
     selector: 'app-sales-list',
     standalone: true,
-    imports: [CommonModule, SalesFormComponent, ConfirmationModalComponent],
+    imports: [CommonModule, FormsModule, SalesFormComponent, ConfirmationModalComponent],
     template: `
       <div class="sales-list">
         <h2>Sales Records</h2>
+
+        <div class="date-filter">
+          <label for="filterDate">Filter by Date:</label>
+          <input
+            type="date"
+            id="filterDate"
+            [(ngModel)]="filterDate"
+            (change)="filterByDate()"
+            class="form-control"
+          />
+          <button (click)="clearDateFilter()" class="btn btn-secondary">Clear Filter</button>
+        </div>
 
         @if (loading) {
           <div class="loading">Loading sales...</div>
@@ -76,22 +89,25 @@ export class SalesListComponent implements OnInit {
   saleToDelete: SaleDto | null = null;
   deleteMessage = '';
 
+  // Date filter
+  filterDate: string = '';
+
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
     this.loadSales();
   }
 
-  loadSales(): void {
+  loadSales(paginationParams?: PaginationParams): void {
     this.loading = true;
     this.error = null;
 
-    const paginationParams: PaginationParams = {
+    const params = paginationParams || {
       page: 1,
       pageSize: 10
     };
 
-    this.apiService.getPagedSales(paginationParams).subscribe({
+    this.apiService.getPagedSales(params).subscribe({
       next: (data) => {
         this.sales = data;
         this.loading = false;
@@ -102,6 +118,26 @@ export class SalesListComponent implements OnInit {
         console.error('Error loading sales: ', err);
       }
     });
+  }
+
+  filterByDate(): void {
+    if (this.filterDate) {
+      const paginationParams: PaginationParams = {
+        page: 1,
+        pageSize: 10,
+        minDateOfSale: this.filterDate,
+        maxDateOfSale: this.filterDate
+      };
+
+      this.loadSales(paginationParams);
+    } else {
+      this.loadSales();
+    }
+  }
+
+  clearDateFilter(): void {
+    this.filterDate = '';
+    this.loadSales();
   }
 
   addSale(): void {
