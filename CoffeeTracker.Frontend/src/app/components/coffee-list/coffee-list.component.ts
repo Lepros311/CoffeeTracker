@@ -185,5 +185,6 @@ export class CoffeeListComponent implements OnInit {
     onCancelForm(): void {
       this.showForm = false;
       this.selectedCoffee = {id: 0, name: '', price: 0};
+      this.isEditing = false;
     }
 }

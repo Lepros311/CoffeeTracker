@@ -1,6 +1,6 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, NgForm} from '@angular/forms';
 import {SaleDto, CreateSaleDto, UpdateSaleDto} from '../../models/sale.model';
 import {CoffeeDto} from '../../models/coffee.model';
 import {ApiService, PaginationParams} from '../../services/api.service';
@@ -27,7 +27,7 @@ import {ApiService, PaginationParams} from '../../services/api.service';
               <option [ngValue]="coffee.id">{{coffee.name}} - {{coffee.price | currency:'USD':'symbol':'1.2-2'}}</option>
             }
           </select>
-          @if ((coffeeInput.invalid && coffeeInput.touched) || selectedCoffeeId === null) {
+          @if (coffeeInput.invalid && coffeeInput.touched && selectedCoffeeId === null) {
             <div class="error-message">Please select a coffee</div>
           }
         </div>
@@ -63,6 +63,7 @@ export class SalesFormComponent implements OnInit {
   @Input() isEditing = false;
   @Output() save = new EventEmitter<CreateSaleDto | UpdateSaleDto>();
   @Output() cancel = new EventEmitter<void>();
+  @ViewChild('saleForm') saleForm!: NgForm;
 
   coffees: CoffeeDto[] = [];
   loading = false;
@@ -150,6 +151,9 @@ export class SalesFormComponent implements OnInit {
   }
 
   onCancel(): void {
+    this.selectedCoffeeId = null;
+    this.sale = {id: 0, dateAndTimeOfSale: '', total: 0, coffeeName: '', coffeeId: 0};
+    this.saleForm.resetForm();
     this.cancel.emit();
   }
 

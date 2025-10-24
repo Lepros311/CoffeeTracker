@@ -1,6 +1,6 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, NgForm} from '@angular/forms';
 import {CoffeeDto} from '../../../models/coffee.model';
 
 @Component({
@@ -66,6 +66,7 @@ export class CoffeeFormComponent implements OnInit {
   @Input() isEditing = false;
   @Output() save = new EventEmitter<CoffeeDto>();
   @Output() cancel = new EventEmitter<void>();
+  @ViewChild('coffeeForm') coffeeForm!: NgForm;
 
   ngOnInit(): void {
     // Create a copy to avoid modifying the original
@@ -79,6 +80,8 @@ export class CoffeeFormComponent implements OnInit {
   }
 
   onCancel(): void {
+    this.coffee = {id: 0, name: '', price: 0};
+    this.coffeeForm.resetForm();
     this.cancel.emit();
   }
 }

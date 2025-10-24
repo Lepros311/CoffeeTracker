@@ -224,5 +224,6 @@ export class SalesListComponent implements OnInit {
   onCancelForm(): void {
     this.showForm = false;
     this.selectedSale = {id: 0, dateAndTimeOfSale: '', total: 0, coffeeName: '', coffeeId: 0};
+    this.isEditing = false;
   }
 }
