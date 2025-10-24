@@ -17,17 +17,17 @@ import {ApiService, PaginationParams} from '../../services/api.service';
           <select
             id="coffeeId"
             name="coffeeId"
-            [(ngModel)]="sale.coffeeId"
+            [(ngModel)]="selectedCoffeeId"
             required
             #coffeeInput="ngModel"
             class="form-control"
           >
-            <option value="">Select a coffee</option>
+            <option [ngValue]="null">Select a coffee</option>
             @for (coffee of coffees; track coffee.id) {
-              <option [value]="coffee.id">{{coffee.name}} - {{coffee.price | currency:'USD':'symbol':'1.2-2'}}</option>
+              <option [ngValue]="coffee.id">{{coffee.name}} - {{coffee.price | currency:'USD':'symbol':'1.2-2'}}</option>
             }
           </select>
-          @if (coffeeInput.invalid && coffeeInput.touched) {
+          @if ((coffeeInput.invalid && coffeeInput.touched) || selectedCoffeeId === null) {
             <div class="error-message">Please select a coffee</div>
           }
         </div>
@@ -46,7 +46,7 @@ import {ApiService, PaginationParams} from '../../services/api.service';
         </div>
 
         <div class="form-actions">
-          <button type="submit" [disabled]="saleForm.invalid" class="btn btn-primary">
+          <button type="submit" [disabled]="saleForm.invalid || loading || selectedCoffeeId === null" class="btn btn-primary">
             {{isEditing ? 'Update Sale' : 'Add Sale'}}
           </button>
           <button type="button" (click)="onCancel()" class="btn btn-secondary">
@@ -66,6 +66,7 @@ export class SalesFormComponent implements OnInit {
 
   coffees: CoffeeDto[] = [];
   loading = false;
+  selectedCoffeeId: number | null = null; // Add this for the dropdown
 
   constructor(private apiService: ApiService) {}
 
@@ -73,6 +74,9 @@ export class SalesFormComponent implements OnInit {
     this.loadCoffees();
     // Create a copy to avoid modifying the original
     this.sale = {...this.sale};
+
+    // Set selectedCoffeeId to null for new sales, or the actual value for editing
+    this.selectedCoffeeId = this.isEditing ? this.selectedCoffeeId : null;
 
     // Convert backend date format to datetime-local format
     if (this.sale.dateAndTimeOfSale) {
@@ -117,9 +121,9 @@ export class SalesFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.sale.coffeeId) {
+    if (this.selectedCoffeeId && this.selectedCoffeeId === null) {
       const saleData = {
-        coffeeId: this.sale.coffeeId,
+        coffeeId: this.selectedCoffeeId,
         dateAndTimeOfSale: this.sale.dateAndTimeOfSale ? this.formatDateForBackend(this.sale.dateAndTimeOfSale) : undefined
       };
       this.save.emit(saleData);
