@@ -11,8 +11,6 @@ import {ApiService, PaginationParams} from '../../services/api.service';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="sales-form">
-      <h3>{{isEditing ? 'Edit Sale' : 'Add New Sale'}}</h3>
-
       <form (ngSubmit)="onSubmit()" #saleForm="ngForm">
         <div class="form-group">
           <label for="coffeeId">Coffee:</label>
@@ -58,7 +56,7 @@ import {ApiService, PaginationParams} from '../../services/api.service';
       </form>
     </div>
   `,
-  styleUrls: ['././sales-form.component.css']
+  styleUrls: ['./sales-form.component.css']
 })
 export class SalesFormComponent implements OnInit {
   @Input() sale: SaleDto = {id: 0, dateAndTimeOfSale: '', total: 0, coffeeName: '', coffeeId: 0};

@@ -8,9 +8,7 @@ import {CoffeeDto} from '../../../models/coffee.model';
     standalone: true,
     imports: [CommonModule, FormsModule],
     template: `
-      <div class="coffee-form">
-        <h3>{{isEditing ? 'Edit Coffee' : 'Add New Coffee'}}</h3>
-        
+      <div class="coffee-form">     
         <form (ngSubmit)="onSubmit()" #coffeeForm="ngForm">
           <div class="form-group">
             <label for="name">Coffee Name:</label>
