@@ -5,11 +5,12 @@ import {ApiService, PaginationParams} from '../../services/api.service';
 import {SaleDto, CreateSaleDto, UpdateSaleDto} from '../../models/sale.model';
 import {SalesFormComponent} from '../sales-form/sales-form.component';
 import {ConfirmationModalComponent} from '../confirmation-modal/confirmation-modal.component';
+import {FormModalComponent} from '../form-modal/form-modal.component';
 
 @Component({
     selector: 'app-sales-list',
     standalone: true,
-    imports: [CommonModule, FormsModule, SalesFormComponent, ConfirmationModalComponent],
+    imports: [CommonModule, FormsModule, SalesFormComponent, ConfirmationModalComponent, FormModalComponent],
     template: `
       <div class="sales-list">
         <h2>Sales Records</h2>
@@ -56,15 +57,18 @@ import {ConfirmationModalComponent} from '../confirmation-modal/confirmation-mod
           </div>
         }
 
-        @if (showForm) {
-          <app-sales-form
-            [sale]="selectedSale"
-            [isEditing]="isEditing"
-            (save)="onSaveSale($event)"
+        <app-form-modal
+            [isVisible]="showForm"
+            [modalTitle]="isEditing ? 'Edit Sale' : 'Add New Sale'"
             (cancel)="onCancelForm()">
-          </app-sales-form>
-        }
-
+            <app-sales-form
+                [sale]="selectedSale"
+                [isEditing]="isEditing"
+                (save)="onSaveSale($event)"
+                (cancel)="onCancelForm()">
+            </app-sales-form>
+        </app-form-modal>
+        
         <app-confirmation-modal
           [isVisible]="showDeleteModal"  
           modalTitle="Delete Sale"

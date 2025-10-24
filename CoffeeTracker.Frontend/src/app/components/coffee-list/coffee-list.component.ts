@@ -4,11 +4,12 @@ import {ApiService, PaginationParams} from '../../services/api.service';
 import {CoffeeDto} from '../../models/coffee.model';
 import {CoffeeFormComponent} from './coffee-form/coffee-form.component'
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
+import {FormModalComponent} from '../form-modal/form-modal.component';
 
 @Component({
     selector: 'app-coffee-list',
     standalone: true,
-    imports: [CommonModule, CoffeeFormComponent, ConfirmationModalComponent],
+    imports: [CommonModule, CoffeeFormComponent, ConfirmationModalComponent, FormModalComponent],
     template: `
         <div class="coffee-list">
             <h2>Coffee List</h2>
@@ -43,14 +44,17 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
                 </div>
             }
 
-            @if (showForm) {
+            <app-form-modal
+                [isVisible]="showForm"
+                [modalTitle]="isEditing ? 'Edit Coffee' : 'Add New Coffee'"
+                (cancel)="onCancelForm()">
                 <app-coffee-form
                     [coffee]="selectedCoffee"
                     [isEditing]="isEditing"
                     (save)="onSaveCoffee($event)"
                     (cancel)="onCancelForm()">
                 </app-coffee-form>
-            }
+            </app-form-modal>
 
             <app-confirmation-modal
                 [isVisible]="showDeleteModal"
