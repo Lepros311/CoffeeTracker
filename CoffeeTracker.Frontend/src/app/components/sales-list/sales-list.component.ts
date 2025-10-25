@@ -57,6 +57,26 @@ import {FormModalComponent} from '../form-modal/form-modal.component';
           </div>
         }
 
+        <div class="pagination">
+          <button
+            class="btn btn-secondary"
+            [disabled]="currentPage <= 1"
+            (click)="goToPage(currentPage - 1)">
+            Previous
+          </button>
+
+          <span class="page-info">
+            Page {{currentPage}} of {{totalPages}}
+          </span>
+
+          <button
+            class="btn btn-secondary"
+            [disabled]="currentPage >= totalPages"
+            (click)="goToPage(currentPage + 1)">
+            Next 
+          </button>
+        </div>
+
         <app-form-modal
             [isVisible]="showForm"
             [modalTitle]="isEditing ? 'Edit Sale' : 'Add New Sale'"
@@ -87,6 +107,9 @@ export class SalesListComponent implements OnInit {
   showForm = false;
   isEditing = false;
   selectedSale: SaleDto = {id: 0, dateAndTimeOfSale: null, total: 0, coffeeName: '', coffeeId: 0};
+  currentPage = 1;
+  totalPages = 1;
+  pageSize = 10;
 
   // Modal state
   showDeleteModal = false;
@@ -107,14 +130,15 @@ export class SalesListComponent implements OnInit {
     this.error = null;
 
     const params = paginationParams || {
-      page: 1,
-      pageSize: 10
+      page: this.currentPage,
+      pageSize: this.pageSize
     };
 
     this.apiService.getPagedSales(params).subscribe({
-      next: (data) => {
-        this.sales = data;
+      next: (response) => {
+        this.sales = response.data;
         this.loading = false;
+        this.totalPages = Math.ceil(response.totalRecords / response.pageSize);
       },
       error: (err) => {
         this.error = 'Failed to load sales';
@@ -124,15 +148,23 @@ export class SalesListComponent implements OnInit {
     });
   }
 
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadSales();
+    }
+  }
+
   filterByDate(): void {
     if (this.filterDate) {
       const paginationParams: PaginationParams = {
         page: 1,
-        pageSize: 10,
+        pageSize: this.pageSize,
         minDateOfSale: this.filterDate,
         maxDateOfSale: this.filterDate
       };
 
+      this.currentPage = 1;
       this.loadSales(paginationParams);
     } else {
       this.loadSales();

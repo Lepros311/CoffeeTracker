@@ -32,6 +32,8 @@ public class CoffeeRepository : ICoffeeRepository
             if (paginationParams.MaxPrice.HasValue)
                 query = query.Where(p => p.Price <= paginationParams.MaxPrice.Value);
 
+                            var totalRecords = await query.CountAsync();
+
             var sortBy = paginationParams.SortBy?.Trim().ToLower() ?? "id";
             var sortAscending = paginationParams.SortAscending;
 
@@ -50,6 +52,7 @@ public class CoffeeRepository : ICoffeeRepository
 
             response.Status = ResponseStatus.Success;
             response.Data = pagedCoffees;
+                        response.TotalRecords = totalRecords;
         }
         catch (Exception ex)
         {

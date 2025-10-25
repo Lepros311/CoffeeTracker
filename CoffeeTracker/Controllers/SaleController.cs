@@ -17,7 +17,7 @@ namespace CoffeeTracker.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<SaleDto>>> GetPagedSales([FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult<PagedResponse<List<SaleDto>>>> GetPagedSales([FromQuery] PaginationParams paginationParams)
         {
             var responseWithDtos = await _saleService.GetPagedSales(paginationParams);
 

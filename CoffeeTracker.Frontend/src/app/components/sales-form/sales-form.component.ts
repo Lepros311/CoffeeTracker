@@ -116,8 +116,8 @@ export class SalesFormComponent implements OnInit {
     };
 
     this.apiService.getPagedCoffees(paginationParams).subscribe({
-      next: (data) => {
-        this.coffees = data;
+      next: (response) => {
+        this.coffees = response.data;
         this.loading = false;
       },
       error: (err) => {
