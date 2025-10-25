@@ -67,23 +67,6 @@ public class SaleService : ISaleService
 
         DateTime dateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? DateTime.UtcNow;
 
-        // DateTime dateAndTimeOfSale;
-
-        // if (!string.IsNullOrWhiteSpace(writeSaleDto.DateAndTimeOfSale))
-        // {
-        //     var formats = new[] { "MM-dd-yyyy h:mm tt", "M-d-yyyy h:mm tt" };
-        //     if (!DateTime.TryParseExact(writeSaleDto.DateAndTimeOfSale, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateAndTimeOfSale))
-        //     {
-        //         saleResponseWithDataDto.Status = ResponseStatus.Fail;
-        //         saleResponseWithDataDto.Message = "Invalid date format. Use MM-dd-yyyy h:mm tt (e.g., 11-04-2025 10:45 pm).";
-        //         return saleResponseWithDataDto;
-        //     }
-        // }
-        // else
-        // {
-        //     dateAndTimeOfSale = DateTime.UtcNow;
-        // }
-
         var newSale = new Sale
         {
             CoffeeId = coffeeResponse.Data.Id,
@@ -142,21 +125,6 @@ public class SaleService : ISaleService
         var existingSale = saleResponse.Data;
 
         DateTime dateAndTimeOfSale = existingSale.DateAndTimeOfSale;
-
-        // if (!string.IsNullOrWhiteSpace(updateSaleDto.DateAndTimeOfSale))
-        // {
-        //     var formats = new[] { "MM-dd-yyyy h:mm tt", "M-d-yyyy h:mm tt" };
-        //     if (!DateTime.TryParseExact(updateSaleDto.DateAndTimeOfSale, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateAndTimeOfSale))
-        //     {
-        //         saleResponse.Status = ResponseStatus.Fail;
-        //         saleResponse.Message = "Invalid date format. Use MM-dd-yyyy h:mm tt (e.g., 11-04-2025 10:45 pm).";
-        //         return saleResponse;
-        //     }
-        // }
-        // else
-        // {
-        //     dateAndTimeOfSale = existingSale.DateAndTimeOfSale;
-        // }
 
         existingSale.DateAndTimeOfSale = dateAndTimeOfSale;
 

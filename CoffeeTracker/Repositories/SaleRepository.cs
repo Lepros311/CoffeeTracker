@@ -34,7 +34,7 @@ public class SaleRepository : ISaleRepository
             if (paginationParams.MaxDateOfSale.HasValue)
                 query = query.Where(s => DateOnly.FromDateTime(s.DateAndTimeOfSale) <= paginationParams.MaxDateOfSale.Value);
 
-                            var totalRecords = await query.CountAsync();
+            var totalRecords = await query.CountAsync();
 
             var sortBy = paginationParams.SortBy?.Trim().ToLower() ?? "saleid";
             var sortAscending = paginationParams.SortAscending;
@@ -55,7 +55,7 @@ public class SaleRepository : ISaleRepository
 
             response.Status = ResponseStatus.Success;
             response.Data = pagedSales;
-                        response.TotalRecords = totalRecords;
+            response.TotalRecords = totalRecords;
         }
         catch (Exception ex)
         {

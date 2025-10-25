@@ -26,7 +26,7 @@ namespace CoffeeTracker.Api.Controllers
                 return BadRequest(responseWithDtos.Message);
             }
 
-            return Ok(responseWithDtos.Data);
+            return Ok(responseWithDtos);
         }
 
         [HttpGet("{id}")]
