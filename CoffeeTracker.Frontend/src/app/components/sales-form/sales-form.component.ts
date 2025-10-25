@@ -101,12 +101,8 @@ export class SalesFormComponent implements OnInit {
 
   onDateChange(dateString: string): void {
     if (dateString) {
-      // Create date in local timezone by manually parsing the components
-      const [datePart, timePart] = dateString.split('T');
-      const [year, month, day] = datePart.split('-').map(Number);
-      const [hours, minutes] = timePart.split(':').map(Number);
-      
-      this.sale.dateAndTimeOfSale = new Date(year, month - 1, day, hours, minutes);
+      // Create date in UTC to match backend expectations
+      this.sale.dateAndTimeOfSale = new Date(dateString + ':00Z');
     } else {
       this.sale.dateAndTimeOfSale = null;
     }
