@@ -4,5 +4,5 @@ public class UpdateSaleDto
 {
     public int? CoffeeId { get; set; }
 
-    public String? DateAndTimeOfSale { get; set; }
+    public DateTime? DateAndTimeOfSale { get; set; }
 }

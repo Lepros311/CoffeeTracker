@@ -38,7 +38,8 @@ import {ApiService, PaginationParams} from '../../services/api.service';
             type="datetime-local"
             id="dateAndTimeOfSale"
             name="dateAndTimeOfSale"
-            [(ngModel)]="sale.dateAndTimeOfSale"
+            [ngModel]="sale.dateAndTimeOfSale ? convertDateToLocalString(sale.dateAndTimeOfSale) : ''"
+            (ngModelChange)="onDateChange($event)"
             #dateInput="ngModel"
             class="form-control"
           />
@@ -59,7 +60,7 @@ import {ApiService, PaginationParams} from '../../services/api.service';
   styleUrls: ['./sales-form.component.css']
 })
 export class SalesFormComponent implements OnInit {
-  @Input() sale: SaleDto = {id: 0, dateAndTimeOfSale: '', total: 0, coffeeName: '', coffeeId: 0};
+  @Input() sale: SaleDto = {id: 0, dateAndTimeOfSale: null, total: 0, coffeeName: '', coffeeId: 0};
   @Input() isEditing = false;
   @Output() save = new EventEmitter<CreateSaleDto | UpdateSaleDto>();
   @Output() cancel = new EventEmitter<void>();
@@ -81,27 +82,33 @@ export class SalesFormComponent implements OnInit {
 
     // Convert backend date format to datetime-local format
     if (this.sale.dateAndTimeOfSale) {
-      this.sale.dateAndTimeOfSale = this.convertToDateTimeLocal(this.sale.dateAndTimeOfSale);
+      this.sale.dateAndTimeOfSale = this.sale.dateAndTimeOfSale;
     } else if (!this.isEditing) {
       // Set default date to now if not editing
-      this.sale.dateAndTimeOfSale = this.getCurrentDateTime();
+      this.sale.dateAndTimeOfSale = new Date();
     }
   }
 
-  private convertToDateTimeLocal(dateString: string): string {
-    try {
-      const date = new Date(dateString);
-      // Convert to local time for datetime-local input
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
+  convertDateToLocalString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
+  onDateChange(dateString: string): void {
+    if (dateString) {
+      // Create date in local timezone by manually parsing the components
+      const [datePart, timePart] = dateString.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hours, minutes] = timePart.split(':').map(Number);
       
-      return `${year}-${month}-${day}T${hours}:${minutes}`;
-    } catch (error) {
-      console.error('Error parsing date:', error);
-      return '';
+      this.sale.dateAndTimeOfSale = new Date(year, month - 1, day, hours, minutes);
+    } else {
+      this.sale.dateAndTimeOfSale = null;
     }
   }
 
@@ -128,47 +135,16 @@ export class SalesFormComponent implements OnInit {
     if (this.selectedCoffeeId && this.selectedCoffeeId > 0) {
       const saleData = {
         coffeeId: this.selectedCoffeeId,
-        dateAndTimeOfSale: this.sale.dateAndTimeOfSale ? this.formatDateForBackend(this.sale.dateAndTimeOfSale) : undefined
+        dateAndTimeOfSale: this.sale.dateAndTimeOfSale || new Date()
       };
       this.save.emit(saleData);
     }
   }
 
-  private formatDateForBackend(dateTimeString: string): string {
-    if (!dateTimeString) {
-      return '';
-    }
-
-    const date = new Date(dateTimeString);
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const year = date.getFullYear();
-    const hours = date.getHours();
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    // Convert to 12-hour format
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    const displayHours = hours % 12 || 12;
-
-    return `${month}-${day}-${year} ${displayHours}:${minutes} ${ampm}`;
-  }
-
   onCancel(): void {
     this.selectedCoffeeId = null;
-    this.sale = {id: 0, dateAndTimeOfSale: '', total: 0, coffeeName: '', coffeeId: 0};
+    this.sale = {id: 0, dateAndTimeOfSale: null, total: 0, coffeeName: '', coffeeId: 0};
     this.saleForm.resetForm();
     this.cancel.emit();
-  }
-
-  private getCurrentDateTime(): string {
-    const now = new Date();
-    // Convert to local time for datetime-local input
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 }

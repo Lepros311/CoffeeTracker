@@ -1,6 +1,6 @@
 export interface SaleDto {
     id: number; 
-    dateAndTimeOfSale: string;
+    dateAndTimeOfSale: Date | null;
     total: number;
     coffeeName: string;
     coffeeId: number;
@@ -8,10 +8,10 @@ export interface SaleDto {
 
 export interface CreateSaleDto {
     coffeeId: number;
-    dateAndTimeOfSale?: string;
+    dateAndTimeOfSale?: Date | null;
 }
 
 export interface UpdateSaleDto {
     coffeeId?: number;
-    dateAndTimeOfSale?: string;
+    dateAndTimeOfSale?: Date | null;
 }

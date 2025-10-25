@@ -86,7 +86,7 @@ export class SalesListComponent implements OnInit {
   error: string | null = null;
   showForm = false;
   isEditing = false;
-  selectedSale: SaleDto = {id: 0, dateAndTimeOfSale: '', total: 0, coffeeName: '', coffeeId: 0};
+  selectedSale: SaleDto = {id: 0, dateAndTimeOfSale: null, total: 0, coffeeName: '', coffeeId: 0};
 
   // Modal state
   showDeleteModal = false;
@@ -145,7 +145,7 @@ export class SalesListComponent implements OnInit {
   }
 
   addSale(): void {
-    this.selectedSale = {id: 0, dateAndTimeOfSale: '', total: 0, coffeeName: '', coffeeId: 0};
+    this.selectedSale = {id: 0, dateAndTimeOfSale: null, total: 0, coffeeName: '', coffeeId: 0};
     this.isEditing = false;
     this.showForm = true;
   }
@@ -223,7 +223,7 @@ export class SalesListComponent implements OnInit {
 
   onCancelForm(): void {
     this.showForm = false;
-    this.selectedSale = {id: 0, dateAndTimeOfSale: '', total: 0, coffeeName: '', coffeeId: 0};
+    this.selectedSale = {id: 0, dateAndTimeOfSale: null, total: 0, coffeeName: '', coffeeId: 0};
     this.isEditing = false;
   }
 }
