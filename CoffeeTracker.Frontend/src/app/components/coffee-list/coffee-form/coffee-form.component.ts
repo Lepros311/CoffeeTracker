@@ -80,8 +80,8 @@ export class CoffeeFormComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.coffee = {id: 0, name: '', price: 0};
     this.coffeeForm.resetForm();
+    this.coffee = {id: 0, name: '', price: 0};
     this.cancel.emit();
   }
 }

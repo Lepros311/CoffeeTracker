@@ -90,14 +90,17 @@ export class SalesFormComponent implements OnInit {
 
   private convertToDateTimeLocal(dateString: string): string {
     try {
-      // Parse the date string from backend (handles the microseconds)
       const date = new Date(dateString);
-      // Convert to datetime-local format (YYYY-MM-DDTHH:MM)
-      // Offset for local timezone (same approach as getCurrentDateTime)
-      const localTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-      return localTime.toISOString().slice(0, 16);
+      // Convert to local time for datetime-local input
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
     } catch (error) {
-      console.error('Error parsing date: ', error);
+      console.error('Error parsing date:', error);
       return '';
     }
   }
@@ -122,7 +125,7 @@ export class SalesFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.selectedCoffeeId && this.selectedCoffeeId === null) {
+    if (this.selectedCoffeeId && this.selectedCoffeeId > 0) {
       const saleData = {
         coffeeId: this.selectedCoffeeId,
         dateAndTimeOfSale: this.sale.dateAndTimeOfSale ? this.formatDateForBackend(this.sale.dateAndTimeOfSale) : undefined
@@ -159,8 +162,13 @@ export class SalesFormComponent implements OnInit {
 
   private getCurrentDateTime(): string {
     const now = new Date();
-    // Offset for local timezone
-    const localTime = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
-    return localTime.toISOString().slice(0, 16);
+    // Convert to local time for datetime-local input
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 }
