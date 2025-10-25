@@ -27,7 +27,7 @@ export class ApiService {
 
     // Coffee API endpoints
     getPagedCoffees(paginationParams: PaginationParams): Observable<PagedResponse<CoffeeDto[]>> {
-        const params = new HttpParams().set('page', paginationParams.page.toString()).set('pageSize', paginationParams.pageSize.toString());
+        let params = new HttpParams().set('page', paginationParams.page.toString()).set('pageSize', paginationParams.pageSize.toString());
 
         return this.http.get<PagedResponse<CoffeeDto[]>>(`${this.baseUrl}/coffees`, {params});
     }
