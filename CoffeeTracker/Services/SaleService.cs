@@ -70,7 +70,7 @@ public class SaleService : ISaleService
         var newSale = new Sale
         {
             CoffeeId = coffeeResponse.Data.Id,
-            DateAndTimeOfSale = DateTime.Parse(dateAndTimeOfSale),
+            DateAndTimeOfSale = DateTime.Parse(dateAndTimeOfSale).ToUniversalTime(),
             Total = coffeeResponse.Data.Price
         };
 
