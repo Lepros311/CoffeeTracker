@@ -4,5 +4,5 @@ public class CreateSaleDto
 {
     public int CoffeeId { get; set; }
 
-    public DateTime? DateAndTimeOfSale { get; set; }
+    public string? DateAndTimeOfSale { get; set; }
 }

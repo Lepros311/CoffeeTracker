@@ -26,7 +26,7 @@ namespace CoffeeTracker.Api.Controllers
                 return BadRequest(responseWithDtos.Message);
             }
 
-            return Ok(responseWithDtos.Data);
+            return Ok(responseWithDtos);
         }
 
 
@@ -46,7 +46,7 @@ namespace CoffeeTracker.Api.Controllers
             {
                 Id = returnedCoffee.Id,
                 Name = returnedCoffee.Name,
-                Price = returnedCoffee.Price
+                Price = returnedCoffee.Price.ToString()
             };
 
             return Ok(coffeeDto);

@@ -37,10 +37,10 @@ public class SaleService : ISaleService
         responseWithDataDto.Data = response.Data.Select(s => new SaleDto
         {
             Id = s.Id,
-            DateAndTimeOfSale = s.DateAndTimeOfSale,
+            DateAndTimeOfSale = s.DateAndTimeOfSale.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
             CoffeeName = s.CoffeeName,
             CoffeeId = s.CoffeeId,
-            Total = s.Total
+            Total = s.Total.ToString()
         }).ToList();
 
         return responseWithDataDto;
@@ -65,12 +65,12 @@ public class SaleService : ISaleService
             return saleResponseWithDataDto;
         }
 
-        DateTime dateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? DateTime.UtcNow;
+        var dateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
 
         var newSale = new Sale
         {
             CoffeeId = coffeeResponse.Data.Id,
-            DateAndTimeOfSale = dateAndTimeOfSale,
+            DateAndTimeOfSale = DateTime.Parse(dateAndTimeOfSale),
             Total = coffeeResponse.Data.Price
         };
 
@@ -99,10 +99,10 @@ public class SaleService : ISaleService
             var newSaleDto = new SaleDto
             {
                 Id = newSale.Id,
-                DateAndTimeOfSale = newSale.DateAndTimeOfSale,
+                DateAndTimeOfSale = newSale.DateAndTimeOfSale.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
                 CoffeeName = newSale.Coffee.Name,
                 CoffeeId = newSale.Coffee.Id,
-                Total = newSale.Total,
+                Total = newSale.Total.ToString()
             };
 
             saleResponseWithDataDto.Data = newSaleDto;

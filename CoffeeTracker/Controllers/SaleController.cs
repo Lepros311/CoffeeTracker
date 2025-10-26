@@ -44,10 +44,10 @@ namespace CoffeeTracker.Api.Controllers
             var saleDto = new SaleDto
             {
                 Id = returnedSale.Id,
-                DateAndTimeOfSale = returnedSale.DateAndTimeOfSale,
+                DateAndTimeOfSale = returnedSale.DateAndTimeOfSale.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
                 CoffeeName = returnedSale.CoffeeName,
                 CoffeeId = returnedSale.CoffeeId,
-                Total = returnedSale.Total
+                Total = returnedSale.Total.ToString()
             };
 
             return Ok(saleDto);

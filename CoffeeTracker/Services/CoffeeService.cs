@@ -23,7 +23,7 @@ public class CoffeeService : ICoffeeService
         var responseWithDataDto = new PagedResponse<List<CoffeeDto>>(data: new List<CoffeeDto>(),
                                                pageNumber: paginationParams.Page,
                                                pageSize: paginationParams.PageSize,
-                                               totalRecords: 0);
+                                               totalRecords: response.TotalRecords);
 
         if (response.Status == ResponseStatus.Fail)
         {
@@ -36,7 +36,7 @@ public class CoffeeService : ICoffeeService
         {
             Id = c.Id,
             Name = c.Name,
-            Price = c.Price,
+            Price = c.Price.ToString(),
         }).ToList();
 
         return responseWithDataDto;
@@ -55,7 +55,7 @@ public class CoffeeService : ICoffeeService
         var newCoffee = new Coffee
         {
             Name = writeCoffeeDto.Name,
-            Price = writeCoffeeDto.Price
+            Price = decimal.Parse(writeCoffeeDto.Price)
         };
 
         response = await _coffeeRepository.CreateCoffee(newCoffee);
@@ -74,7 +74,7 @@ public class CoffeeService : ICoffeeService
             {
                 Id = newCoffee.Id,
                 Name = newCoffee.Name,
-                Price = newCoffee.Price
+                Price = newCoffee.Price.ToString()
             };
 
             responseWithDataDto.Data = newCoffeeDto;
@@ -97,7 +97,7 @@ public class CoffeeService : ICoffeeService
         var existingCoffee = response.Data;
 
         existingCoffee.Name = CoffeeDto.Name;
-        existingCoffee.Price = CoffeeDto.Price;
+        existingCoffee.Price = decimal.Parse(CoffeeDto.Price);
 
         response = await _coffeeRepository.UpdateCoffee(existingCoffee);
 
