@@ -66,7 +66,7 @@ public class SaleService : ISaleService
         }
 
         DateTime dateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? DateTime.UtcNow;
-
+        
         var newSale = new Sale
         {
             CoffeeId = coffeeResponse.Data.Id,
