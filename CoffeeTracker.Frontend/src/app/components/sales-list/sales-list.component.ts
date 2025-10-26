@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ApiService, PaginationParams} from '../../services/api.service';
 import {SaleDto, CreateSaleDto, UpdateSaleDto} from '../../models/sale.model';
@@ -10,7 +10,7 @@ import {FormModalComponent} from '../form-modal/form-modal.component';
 @Component({
     selector: 'app-sales-list',
     standalone: true,
-    imports: [CommonModule, FormsModule, SalesFormComponent, ConfirmationModalComponent, FormModalComponent],
+    imports: [CommonModule, FormsModule, SalesFormComponent, ConfirmationModalComponent, FormModalComponent, DatePipe],
     template: `
       <div class="sales-list">
         <h2>Sales Records</h2>

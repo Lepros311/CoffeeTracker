@@ -101,8 +101,7 @@ export class SalesFormComponent implements OnInit {
 
   onDateChange(dateString: string): void {
     if (dateString) {
-      // Create date in UTC to match backend expectations
-      this.sale.dateAndTimeOfSale = new Date(dateString + ':00Z');
+      this.sale.dateAndTimeOfSale = new Date(dateString);
     } else {
       this.sale.dateAndTimeOfSale = null;
     }
