@@ -19,7 +19,7 @@ public class CoffeeService : ICoffeeService
     public async Task<PagedResponse<List<CoffeeDto>>> GetPagedCoffees(PaginationParams paginationParams)
     {
         var response = await _coffeeRepository.GetPagedCoffees(paginationParams);
-
+        
         var responseWithDataDto = new PagedResponse<List<CoffeeDto>>(data: new List<CoffeeDto>(),
                                                pageNumber: paginationParams.Page,
                                                pageSize: paginationParams.PageSize,

@@ -42,6 +42,26 @@ import {FormModalComponent} from '../form-modal/form-modal.component';
                         </div>
                     }
                 </div>
+
+                <div class="pagination">
+        <button
+          class="btn btn-secondary"
+          [disabled]="currentPage <= 1"
+          (click)="goToPage(currentPage - 1)">
+          Previous
+        </button>
+
+        <span class="page-info">
+          Page {{currentPage}} of {{totalPages}}
+        </span>
+
+        <button
+          class="btn btn-secondary"
+          [disabled]="currentPage >= totalPages"
+          (click)="goToPage(currentPage + 1)">
+          Next
+        </button>
+      </div>
             }
 
             <app-form-modal
@@ -79,6 +99,11 @@ export class CoffeeListComponent implements OnInit {
     coffeeToDelete: CoffeeDto | null = null;
     deleteMessage = '';
 
+    // Pagination state
+currentPage = 1;
+totalPages = 1;
+pageSize = 10;
+
     constructor(private apiService: ApiService) {}
 
     ngOnInit(): void {
@@ -90,13 +115,14 @@ export class CoffeeListComponent implements OnInit {
         this.error = null;
 
         const paginationParams: PaginationParams = {
-            page: 1,
-            pageSize: 10
+            page: this.currentPage,
+            pageSize: this.pageSize
         };
 
         this.apiService.getPagedCoffees(paginationParams).subscribe({
-            next: (data) => {
-                this.coffees = data;
+            next: (response) => {
+                this.coffees = response.data;
+                this.totalPages = Math.ceil(response.totalRecords / response.pageSize);
                 this.loading = false;
             },
             error: (err) => {
@@ -105,6 +131,13 @@ export class CoffeeListComponent implements OnInit {
                 console.error('Error loading coffees: ', err);
             }
         });
+    }
+
+    goToPage(page: number): void {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+        this.loadCoffees();
+      }
     }
 
     addCoffee(): void {

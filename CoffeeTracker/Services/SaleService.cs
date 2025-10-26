@@ -65,8 +65,13 @@ public class SaleService : ISaleService
             return saleResponseWithDataDto;
         }
 
+<<<<<<< HEAD
         var dateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
 
+=======
+        DateTime dateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? DateTime.UtcNow;
+        
+>>>>>>> c7bcaf7ce7ca673ae6383eb8aae938f22349d635
         var newSale = new Sale
         {
             CoffeeId = coffeeResponse.Data.Id,

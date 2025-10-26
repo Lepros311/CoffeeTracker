@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CoffeeDto } from '../models/coffee.model';
-import { SaleDto, CreateSaleDto, UpdateSaleDto } from '../models/sale.model';
+import { SaleDto, CreateSaleDto, UpdateSaleDto, PagedResponse } from '../models/sale.model';
 
 export interface PaginationParams {
     page: number;
@@ -26,10 +26,10 @@ export class ApiService {
     constructor(private http: HttpClient) { }
 
     // Coffee API endpoints
-    getPagedCoffees(paginationParams: PaginationParams): Observable<CoffeeDto[]> {
-        const params = new HttpParams().set('page', paginationParams.page.toString()).set('pageSize', paginationParams.pageSize.toString());
+    getPagedCoffees(paginationParams: PaginationParams): Observable<PagedResponse<CoffeeDto[]>> {
+        let params = new HttpParams().set('page', paginationParams.page.toString()).set('pageSize', paginationParams.pageSize.toString());
 
-        return this.http.get<CoffeeDto[]>(`${this.baseUrl}/coffees`, {params});
+        return this.http.get<PagedResponse<CoffeeDto[]>>(`${this.baseUrl}/coffees`, {params});
     }
 
     getCoffeeById(id: number): Observable<CoffeeDto> {
@@ -49,14 +49,14 @@ export class ApiService {
     }
 
     // Sale API endpoints
-    getPagedSales(paginationParams: PaginationParams): Observable<SaleDto[]> {
+    getPagedSales(paginationParams: PaginationParams): Observable<PagedResponse<SaleDto[]>> {
         let params = new HttpParams().set('page', paginationParams.page.toString()).set('pageSize', paginationParams.pageSize.toString());
 
         // Add other optional params if they exist
         if (paginationParams.minDateOfSale) params = params.set('minDateOfSale', paginationParams.minDateOfSale);
         if (paginationParams.maxDateOfSale) params = params.set('maxDateOfSale', paginationParams.maxDateOfSale);
 
-        return this.http.get<SaleDto[]>(`${this.baseUrl}/sales`, {params});
+        return this.http.get<PagedResponse<SaleDto[]>>(`${this.baseUrl}/sales`, {params});
     }
 
     getSaleById(id: number): Observable<SaleDto> {
