@@ -66,8 +66,6 @@ public class SaleService : ISaleService
         }
 
         var dateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-
-        DateTime dateAndTimeOfSale = writeSaleDto.DateAndTimeOfSale ?? DateTime.UtcNow;
         
         var newSale = new Sale
         {
