@@ -17,9 +17,9 @@ The [Coffee Tracker](https://www.thecsharpacademy.com/project/32/Coffee%20Tracke
 ## Running the App
 
 In the terminal, navigate to the API folder (CoffeeTracker > CoffeeTracker) and execute the following:  
-dotnet run --urls "https://localhost:7205
+`dotnet run --urls "https://localhost:7205`
 
 Then open a separate terminal and navigate to the frontend folder (CoffeeTracker > CoffeeTracker.Frontend) and execute the following:  
-ng serve
+`ng serve`
 
 In your web browser, go to http://localhost:4200
