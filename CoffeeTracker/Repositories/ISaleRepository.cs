@@ -11,7 +11,7 @@ public interface ISaleRepository
 
     public Task<BaseResponse<Sale>> CreateSale(Sale sale);
 
-    public Task<BaseResponse<SaleDto>> UpdateSale(SaleDto updatedSale);
+    public Task<BaseResponse<Sale>> UpdateSale(Sale updatedSale);
 
     public Task<BaseResponse<Sale>> DeleteSale(int id);
 }

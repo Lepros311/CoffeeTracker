@@ -124,43 +124,36 @@ public class SaleRepository : ISaleRepository
         return response;
     }
 
-    public async Task<BaseResponse<SaleDto>> UpdateSale(SaleDto updatedSaleDto)
+public async Task<BaseResponse<Sale>> UpdateSale(Sale updatedSale)
+{
+    var response = new BaseResponse<Sale>();
+
+    try
     {
-        var response = new BaseResponse<SaleDto>();
+        _dbContext.Sales.Update(updatedSale);
+        var affectedRows = await _dbContext.SaveChangesAsync();
 
-        Sale updatedSale = new Sale();
-
-        updatedSale.Total = Convert.ToDecimal(updatedSaleDto.Total);
-        updatedSale.CoffeeName = updatedSaleDto.CoffeeName;
-        updatedSale.CoffeeId = updatedSaleDto.CoffeeId;
-        updatedSale.DateAndTimeOfSale = DateTime.Parse(updatedSaleDto.DateAndTimeOfSale).ToUniversalTime();
-
-        try
+        if (affectedRows == 0)
         {
-            _dbContext.Sales.Update(updatedSale);
-            var affectedRows = await _dbContext.SaveChangesAsync();
-
-            if (affectedRows == 0)
-            {
-                response.Status = ResponseStatus.Fail;
-                response.Message = "No changes were saved.";
-            }
-            else
-            {
-                await _dbContext.Entry(updatedSale).Reference(s => s.Coffee).LoadAsync();
-
-                response.Status = ResponseStatus.Success;
-                response.Data = updatedSaleDto;
-            }
-        }
-        catch (Exception ex)
-        {
-            response.Message = $"Error in SaleRepository {nameof(UpdateSale)}: {ex.Message}";
             response.Status = ResponseStatus.Fail;
+            response.Message = "No changes were saved.";
         }
+        else
+        {
+            await _dbContext.Entry(updatedSale).Reference(s => s.Coffee).LoadAsync();
 
-        return response;
+            response.Status = ResponseStatus.Success;
+            response.Data = updatedSale;
+        }
     }
+    catch (Exception ex)
+    {
+        response.Message = $"Error in SaleRepository {nameof(UpdateSale)}: {ex.Message}";
+        response.Status = ResponseStatus.Fail;
+    }
+
+    return response;
+}
 
     public async Task<BaseResponse<Sale>> DeleteSale(int id)
     {

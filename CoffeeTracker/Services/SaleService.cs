@@ -112,57 +112,65 @@ public class SaleService : ISaleService
     }
 
     public async Task<BaseResponse<SaleDto>> UpdateSale(int id, UpdateSaleDto updateSaleDto)
+{
+    var saleResponseDto = new BaseResponse<SaleDto>();
+    var saleResponse = await GetSaleById(id);
+
+    if (saleResponse.Status == ResponseStatus.Fail)
     {
-        var saleResponseDto = new BaseResponse<SaleDto>();
-        var saleResponse = new BaseResponse<Sale>();
+        saleResponseDto.Status = saleResponse.Status;
+        saleResponseDto.Message = saleResponse.Message;
+        return saleResponseDto;
+    }
 
-        saleResponseDto.Data = new SaleDto();
+    var existingSale = saleResponse.Data;
 
-        saleResponse = await GetSaleById(id);
+    // Update date if provided
+    if (updateSaleDto.DateAndTimeOfSale != null)
+    {
+        existingSale.DateAndTimeOfSale = DateTime.Parse(updateSaleDto.DateAndTimeOfSale).ToUniversalTime();
+    }
 
-        if (saleResponse.Status == ResponseStatus.Fail)
+    // Update coffee if provided
+    if (updateSaleDto.CoffeeId != null)
+    {
+        var coffeeResponse = await _coffeeRepository.GetCoffeeById(updateSaleDto.CoffeeId.Value);
+
+        if (coffeeResponse.Status == ResponseStatus.Fail)
         {
-            saleResponseDto.Status = saleResponse.Status;
-            saleResponseDto.Message = saleResponse.Message;
+            saleResponseDto.Status = ResponseStatus.Fail;
+            saleResponseDto.Message = coffeeResponse.Message;
             return saleResponseDto;
         }
 
-        saleResponseDto.Data.CoffeeName = saleResponse.Data.CoffeeName;
-        saleResponseDto.Data.CoffeeId = saleResponse.Data.CoffeeId;
-        saleResponseDto.Data.Total = saleResponse.Data.Total.ToString();
-        saleResponseDto.Data.DateAndTimeOfSale = saleResponse.Data.DateAndTimeOfSale.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+        existingSale.CoffeeId = coffeeResponse.Data.Id;
+        existingSale.CoffeeName = coffeeResponse.Data.Name;
+        existingSale.Total = coffeeResponse.Data.Price;
+    }
 
-        var existingSaleDto = saleResponseDto.Data;
+    // Update using the tracked entity
+    var updateResponse = await _saleRepository.UpdateSale(existingSale);
 
-        String dateAndTimeOfSale = updateSaleDto.DateAndTimeOfSale ?? existingSaleDto.DateAndTimeOfSale;
-
-        existingSaleDto.DateAndTimeOfSale = dateAndTimeOfSale;
-
-        if (updateSaleDto.CoffeeId != null)
-        {
-            var coffeeResponse = await _coffeeRepository.GetCoffeeById(updateSaleDto.CoffeeId.Value);
-
-            if (coffeeResponse.Status == ResponseStatus.Fail)
-            {
-                saleResponseDto.Status = ResponseStatus.Fail;
-                saleResponseDto.Message = coffeeResponse.Message;
-                return saleResponseDto;
-            }
-
-            existingSaleDto.CoffeeId = coffeeResponse.Data.Id;
-            existingSaleDto.CoffeeName = coffeeResponse.Data.Name;
-            existingSaleDto.Total = coffeeResponse.Data.Price.ToString();
-        }
-
-        saleResponseDto = await _saleRepository.UpdateSale(existingSaleDto);
-
-        saleResponseDto.Data.CoffeeName = saleResponse.Data.CoffeeName;
-        saleResponseDto.Data.CoffeeId = saleResponse.Data.Id;
-        saleResponseDto.Data.Total = saleResponse.Data.Total.ToString();
-        saleResponseDto.Data.DateAndTimeOfSale = saleResponse.Data.DateAndTimeOfSale.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-
+    if (updateResponse.Status == ResponseStatus.Fail)
+    {
+        saleResponseDto.Status = updateResponse.Status;
+        saleResponseDto.Message = updateResponse.Message;
         return saleResponseDto;
     }
+
+    // Convert to DTO for response
+    saleResponseDto.Status = ResponseStatus.Success;
+    saleResponseDto.Data = new SaleDto
+    {
+        Id = updateResponse.Data.Id,
+        DateAndTimeOfSale = updateResponse.Data.DateAndTimeOfSale.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+        CoffeeName = updateResponse.Data.CoffeeName,
+        CoffeeId = updateResponse.Data.CoffeeId,
+        Total = updateResponse.Data.Total.ToString()
+    };
+
+    return saleResponseDto;
+}
 
     public async Task<BaseResponse<Sale>> DeleteSale(int id)
     {
