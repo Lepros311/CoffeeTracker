@@ -33,7 +33,7 @@ import {FormModalComponent} from '../form-modal/form-modal.component';
                         <div class="coffee-item">
                             <div class="coffee-info">
                               <h3>{{coffee.name}}</h3>
-                              <p>Price: {{coffee.price}}</p>
+                              <p>Price: {{coffee.price | currency: 'USD':'symbol':'1.2-2'}}</p>
                             </div>
                             <div class="coffee-actions">
                               <button class="edit-btn" (click)="editCoffee(coffee)">Edit</button>

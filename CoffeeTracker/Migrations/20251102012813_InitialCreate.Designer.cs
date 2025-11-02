@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeTracker.Api.Migrations
 {
     [DbContext(typeof(CoffeeTrackerDbContext))]
-    [Migration("20251009142632_SeedSalesDataFixed")]
-    partial class SeedSalesDataFixed
+    [Migration("20251102012813_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,92 @@ namespace CoffeeTracker.Api.Migrations
                     b.ToTable("Coffees", null, t =>
                         {
                             t.HasCheckConstraint("CK_Coffees_Price", "Price > 0");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDeleted = false,
+                            Name = "Black Coffee",
+                            Price = 1.62m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsDeleted = false,
+                            Name = "Espresso",
+                            Price = 4.42m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsDeleted = false,
+                            Name = "Mocha",
+                            Price = 5.39m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsDeleted = false,
+                            Name = "Latte",
+                            Price = 3.99m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsDeleted = false,
+                            Name = "Cappuccino",
+                            Price = 7.15m
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsDeleted = false,
+                            Name = "Mazagran",
+                            Price = 6.47m
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsDeleted = false,
+                            Name = "Breve",
+                            Price = 6.33m
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsDeleted = false,
+                            Name = "Macchiato",
+                            Price = 5.87m
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IsDeleted = false,
+                            Name = "Cortado",
+                            Price = 8.29m
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IsDeleted = false,
+                            Name = "Dirty Chai",
+                            Price = 4.29m
+                        },
+                        new
+                        {
+                            Id = 11,
+                            IsDeleted = false,
+                            Name = "Irish Coffee",
+                            Price = 5.80m
+                        },
+                        new
+                        {
+                            Id = 12,
+                            IsDeleted = false,
+                            Name = "Turkish Coffee",
+                            Price = 9.15m
                         });
                 });
 
@@ -85,8 +171,8 @@ namespace CoffeeTracker.Api.Migrations
                         new
                         {
                             Id = 1,
-                            CoffeeId = 3,
-                            CoffeeName = "Iced Coffee",
+                            CoffeeId = 1,
+                            CoffeeName = "Black Coffee",
                             DateAndTimeOfSale = new DateTime(2023, 10, 9, 10, 30, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Total = 1.62m

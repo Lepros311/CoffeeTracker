@@ -124,9 +124,16 @@ public class SaleRepository : ISaleRepository
         return response;
     }
 
-    public async Task<BaseResponse<Sale>> UpdateSale(Sale updatedSale)
+    public async Task<BaseResponse<SaleDto>> UpdateSale(SaleDto updatedSaleDto)
     {
-        var response = new BaseResponse<Sale>();
+        var response = new BaseResponse<SaleDto>();
+
+        Sale updatedSale = new Sale();
+
+        updatedSale.Total = Convert.ToDecimal(updatedSaleDto.Total);
+        updatedSale.CoffeeName = updatedSaleDto.CoffeeName;
+        updatedSale.CoffeeId = updatedSaleDto.CoffeeId;
+        updatedSale.DateAndTimeOfSale = DateTime.Parse(updatedSaleDto.DateAndTimeOfSale);
 
         try
         {
@@ -143,7 +150,7 @@ public class SaleRepository : ISaleRepository
                 await _dbContext.Entry(updatedSale).Reference(s => s.Coffee).LoadAsync();
 
                 response.Status = ResponseStatus.Success;
-                response.Data = updatedSale;
+                response.Data = updatedSaleDto;
             }
         }
         catch (Exception ex)

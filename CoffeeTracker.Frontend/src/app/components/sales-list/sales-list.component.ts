@@ -46,7 +46,7 @@ import {FormModalComponent} from '../form-modal/form-modal.component';
                 <div class="sale-info">
                   <h3>{{sale.coffeeName}}</h3>
                   <p>Date: {{sale.dateAndTimeOfSale | date: 'short'}}</p>
-                  <p>Total: {{sale.total}}</p>
+                  <p>Total: {{sale.total | currency: 'USD':'symbol':'1.2-2'}}</p>
                 </div>
                 <div class="sale-actions">
                   <button class="edit-btn" (click)="editSale(sale)">Edit</button>

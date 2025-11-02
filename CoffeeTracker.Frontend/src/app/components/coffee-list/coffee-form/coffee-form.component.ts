@@ -31,7 +31,7 @@ import {CoffeeDto} from '../../../models/coffee.model';
           <div class="form-group">
             <label for="price">Price:</label>
             <input
-              type="number"
+              type="string"
               id="price"
               name="price"
               [(ngModel)]="coffee.price"

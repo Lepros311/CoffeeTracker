@@ -24,8 +24,6 @@ builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<ICoffeeService, CoffeeService>();
 builder.Services.AddScoped<ISaleService, SaleService>();
 
-builder.Services.AddHttpClient<ICoffeeApi, CoffeeApiClient>();
-
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -34,10 +32,6 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<CoffeeTrackerDbContext>();
     dbContext.Database.Migrate();
-
-    var apiClient = scope.ServiceProvider.GetRequiredService<ICoffeeApi>();
-    await CoffeeSeeder.SeedNamesAsync(dbContext, apiClient);
-    await CoffeeSeeder.SeedPricesAsync(dbContext);
 }
 
 if (app.Environment.IsDevelopment())
