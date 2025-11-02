@@ -154,7 +154,7 @@ export class SalesFormComponent implements OnInit, OnChanges {
       
       const saleData = {
         coffeeId: this.selectedCoffeeId,
-        dateAndTimeOfSale: dateValue
+        dateAndTimeOfSale: dateValue.toISOString()
       };
       console.log('Sending sale data:', saleData);
       console.log('dateTimeString value:', this.dateTimeString);

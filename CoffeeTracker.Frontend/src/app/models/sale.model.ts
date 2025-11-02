@@ -8,12 +8,12 @@ export interface SaleDto {
 
 export interface CreateSaleDto {
     coffeeId: number;
-    dateAndTimeOfSale?: Date | null;
+    dateAndTimeOfSale?: string | null;
 }
 
 export interface UpdateSaleDto {
     coffeeId?: number;
-    dateAndTimeOfSale?: Date | null;
+    dateAndTimeOfSale?: string | null;
 }
 
 export interface PagedResponse<T> {

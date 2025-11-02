@@ -133,7 +133,7 @@ public class SaleRepository : ISaleRepository
         updatedSale.Total = Convert.ToDecimal(updatedSaleDto.Total);
         updatedSale.CoffeeName = updatedSaleDto.CoffeeName;
         updatedSale.CoffeeId = updatedSaleDto.CoffeeId;
-        updatedSale.DateAndTimeOfSale = DateTime.Parse(updatedSaleDto.DateAndTimeOfSale);
+        updatedSale.DateAndTimeOfSale = DateTime.Parse(updatedSaleDto.DateAndTimeOfSale).ToUniversalTime();
 
         try
         {
